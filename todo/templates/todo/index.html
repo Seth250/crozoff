@@ -1,0 +1,100 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>Todo List</title>
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
+		<link rel="stylesheet" href="{% static 'todo/css/styles.css' %}" />
+		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700"
+					rel="stylesheet" />
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="page-wrapper">
+			<header class="page-header">
+				<h1>
+					<a href="{% url 'todo:todo_list_create' %}">Todo App</a>
+				</h1>
+			</header>
+
+			<main role="main" class="main-content">
+				{% if messages %}
+					{% for message in messages %}
+					<div class="{{ message.tags }} message">
+						{{ message }}
+					</div>
+					{% endfor %}
+				{% endif %}
+				<div class="container">
+					<div class="todo-header">
+						<h2> You have {{ total_pending }} Pending Todos </h2>
+					</div>
+					<div class="todo-list-container">
+						{% for todo in todo_list %}
+							<div class="todo-item">
+								<div class="item-col-1">
+									<div class="todo-name {% if todo.completed %}strike{% endif %}">
+										{{ todo }}
+									</div>
+									<div class="todo-status">
+										<form method="POST">
+											{% csrf_token %}
+											{% if todo.completed %}
+												<input type="checkbox" id="{{ todo.pk }}" checked />
+											{% else %}
+												<input type="checkbox" id="{{ todo.pk }}" />
+											{% endif %}
+										</form>
+										<span class="{{ todo.get_due_info.class_tag }}">
+											{{ todo.get_due_info.status }}
+										</span>
+									</div>
+								</div>
+								<div class="item-col-2">
+<!-- {#									<form method="POST">
+										{% csrf_token %}
+										{% if todo.completed %}
+											<input type="checkbox" id="{{ todo.pk }}" checked />
+										{% else %}
+											<input type="checkbox" id="{{ todo.pk }}" />
+										{% endif %}
+									</form>#}
+ -->							<a href="{% url 'todo:todo_edit' pk=todo.pk %}#form-container">
+										<i class="far fa-edit"></i>
+									</a>
+									<form method="POST" action="{% url 'todo:todo_delete' pk=todo.pk %}">
+										{% csrf_token %}
+										<button type="Submit" class="delete-button">
+											<i class="far fa-trash-alt"></i>
+										</button>
+									</form>
+								</div>
+							</div>
+						{% empty %}
+							<div class="empty-todo-list">
+								<p>No Todos to Display</p>
+							</div>
+						{% endfor %}
+					</div>
+					<div class="form-container" id="form-container">
+						<form method="POST" action="#">
+							{% csrf_token %}
+							{{ form.as_p }}
+							<button type="submit" class="add-button">Save Todo</button>
+						</form>
+					</div>
+				</div>
+			</main>
+
+			<footer class="page-footer">
+				<p>&copy; {% now "Y" %} Todo App</p>
+			</footer>
+		</div>
+
+		<script src="{% static 'todo/js/main.js' %}"></script>
+	</body>
+</html>
