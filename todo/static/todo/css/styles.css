@@ -1,4 +1,4 @@
-/* Note to self: Don't stupidly remove any supposedly ACTIVE redundant code that you come across, 
+/* Note to self: Don't stupidly remove any SUPPOSEDLY ACTIVE redundant code that you come across, 
    it is most likely more important than you might think(Just a small piece of advice)
 */
 
@@ -14,7 +14,6 @@
 	--main-font-family: 'Roboto', sans-serif;
 	/*--primary-background: #017192;*/
 	/*--primary-background: #01627F;*/
-	/*--primary-background: #23629F;*/
 	--primary-background: #1C4E7F;
 	--primary-color: #fafafa;
 	--primary-border-radius: 3px;
@@ -60,7 +59,7 @@
 	/* reason why you're explicitly setting the top and bottom padding is because you want a 
 	   footer that adapts to the page content
 	   the bottom padding is actually the important piece, that's why you're not using the
-	   syntax shortcut
+	   syntax shorthand form for the padding
 	   and also, the reason why the bottom padding is 8rem is because the footer's height is 
 	   4.8rem and since the padding was 3.2rem initially, 3.2 + 4.8 = 8rem. durrh */
 	padding-top: 3.2rem;
@@ -81,10 +80,9 @@
 	border: 1px solid transparent;
 	text-align: center;
 	padding: 1rem 0;
-	color: black;
 	margin-bottom: 1rem;
 	border-radius: 5px;
-	box-shadow: 0 0 0.15rem 0 rgba(0, 0, 0, 0.6);
+	/*box-shadow: 0 0 0.15rem 0 rgba(0, 0, 0, 0.6);*/
 }
 
 .container{
@@ -389,7 +387,7 @@
 	text-transform: uppercase;
 }
 
-.add-button{
+.save-button{
 	border: 1px solid transparent;
 	cursor: pointer;
 	width: 10em;
@@ -406,7 +404,7 @@
 	margin-top: 0.25rem;
 }
 
-.add-button:hover{
+.save-button:hover{
 	background: #18446F;
 }
 
@@ -416,7 +414,7 @@
 		letter-spacing: 0.01em;
 	}
 
-	.add-button{
+	.save-button{
 		font-size: 90%;
 	}
 }
@@ -427,7 +425,7 @@
 		font-size: 85%;
 	}
 
-	.add-button{
+	.save-button{
 		font-size: 85%;
 		padding: 0.57rem 0;
 	}
@@ -474,7 +472,8 @@
 }
 
 .fa-edit{
-	color: #1261A0;
+	/*color: #1261A0;*/
+	color: #0d5aa7;
 	font-size: 108%;
 }
 
@@ -502,15 +501,18 @@ input[type='checkbox']:checked::after{
 }
 
 .success{
-	/*background: #1da237;*/
-	/*color: white;*/
-	background: lightgreen;
-	color: black;
+	color: #3c763d;
+	/*color: #356936;*/
+	background: #dff0d8;
+	border-color: #d6e9c6;
 }
 
 .info{
-	background: whitesmoke;
-	color: var(--primary-background);
+/*	background: whitesmoke;
+	color: var(--primary-background);*/
+	color: #31708f;
+	background: #d9edf7;
+	border-color: #bce8f1;
 }
 
 .strike{
