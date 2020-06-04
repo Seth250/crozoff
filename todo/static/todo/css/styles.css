@@ -223,7 +223,6 @@
 
 .todo-status{
 	/*border: 1px solid blue;*/
-/*	display: inline-block;*/
 	display: flex;
 	align-items: center;
 	padding: 0.35rem 0.15rem;
@@ -298,6 +297,7 @@
 	font-family: var(--main-font-family);
 	margin-bottom: 0.8rem;
 	color: black;
+	background: #fafafa;
 }
 
 .input-box:focus{
@@ -317,17 +317,11 @@
 	color: grey;
 }
 
-@-webkit-keyframes autofill {
-	0%,100% {
-	  color: inherit;
-	  background: #fafafa;
-	}
-}
-
-.text-input:-webkit-autofill {
-	-webkit-animation-delay: 1s; 
-	-webkit-animation-name: autofill;
-	-webkit-animation-fill-mode: both;
+.text-input:-webkit-autofill,
+.text-input:-webkit-autofill:hover,
+.text-input:-webkit-autofill:focus,
+.text-input:-webkit-autofill:active {
+    -webkit-transition: color 3600s ease-out, background 3600s ease-out;
 }
 
 @media only screen and (max-width: 1024px){
@@ -393,7 +387,6 @@
 	width: 10em;
 	padding: 0.55em 0;
 	border-radius: 0.3rem;
-	/*background: var(--primary-background);*/
 	background: #1f588f;
 	/*background: #017192;*/
 	color: var(--primary-color);
@@ -421,7 +414,7 @@
 
 @media only screen and (max-width: 480px){
 	.date-time-input{
-		width: 15em;
+		/*width: 15em;*/
 		font-size: 85%;
 	}
 
@@ -500,14 +493,14 @@ input[type='checkbox']:checked::after{
 	/*background: #0E8C3A;*/
 }
 
-.success{
+.message-success{
 	color: #3c763d;
 	/*color: #356936;*/
 	background: #dff0d8;
 	border-color: #d6e9c6;
 }
 
-.info{
+.message-info{
 /*	background: whitesmoke;
 	color: var(--primary-background);*/
 	color: #31708f;

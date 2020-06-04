@@ -8,7 +8,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<title>Todo List</title>
 		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" />
-		<link rel="stylesheet" href="{% static 'todo/css/styles.css' %}" />
+		<link href="{% static 'todo/css/styles.css' %}"  rel="stylesheet"/>
 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700"
 					rel="stylesheet" />
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" />
@@ -24,7 +24,7 @@
 			<main role="main" class="main-content">
 				{% if messages %}
 					{% for message in messages %}
-						<div class="message {{ message.tags }}">
+						<div class="message message-{{ message.tags }}">
 							{{ message }}
 						</div>
 					{% endfor %}
