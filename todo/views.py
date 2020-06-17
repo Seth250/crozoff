@@ -65,7 +65,7 @@ class TodoDeleteView(DeleteView):
 		return reverse("todo:todo_list_create")
 
 	def delete(self, request, *args, **kwargs):
-		obj = self.get_object()
+		# obj = self.get_object()
 		messages.success(self.request, self.success_message)
 		return super(TodoDeleteView, self).delete(request, *args, **kwargs)
 
