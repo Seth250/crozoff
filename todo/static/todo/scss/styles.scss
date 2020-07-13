@@ -1,3 +1,8 @@
+// Note to self: Don't stupidly remove any SUPPOSEDLY ACTIVE redundant code that you come across, 
+// it is most likely more important than you might think(Just a small piece of advice)
+
+@import '_config';
+
 *{
     margin: 0;
     padding: 0;
@@ -8,3 +13,45 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
 }
+
+.page-wrapper{
+    position: relative;
+    min-height: 100vh;
+    font-family: $primary-font-stack;
+}
+
+.page-header{
+    background: $primary-background;
+    
+    h1{
+        padding: 1rem;
+        width: 90vw;
+        margin: 0 auto;
+    }
+
+    a{
+        text-decoration: none;
+        color: $primary-color;
+    }
+}
+
+.main-content{
+    // reason why you're explicitly setting the top and bottom padding is because you want a footer 
+    // that adapts to the page content
+    // the bottom padding is actually the important piece, that's why you're not using the syntax shorthand 
+    // form for the padding and also, the reason why the bottom padding is 8rem is because the footer's 
+    // height is 4.8rem and since the padding was 3.2rem initially, 3.2 + 4.8 = 8rem. durrh
+	padding-top: 3.2rem;
+	padding-bottom: 8rem; 
+	// padding: 3.2rem 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-flow: column;
+}
+
+@import '_mobile';
+
+
+
+
