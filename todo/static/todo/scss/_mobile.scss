@@ -1,11 +1,94 @@
+$md-col-1-width: 80%;
+$sm-col-1-width: 76%;
+
 @media only screen and (max-width: 1024px){
 	.page-header{
 		font-size: 90%;
+  }
+
+  .message,
+	.container{
+		width: 75vw;
+  }
+  
+  .todo-header{
+		font-size: 80%;
+	}
+
+	.todo-list-container::-webkit-scrollbar{
+		width: 3px;
 	}
 }
 
 @media only screen and (max-width: 768px){
 	.page-header{
 		font-size: 80%;
+  }
+    
+  .message,
+	.container{
+		width: 86vw;
+	}
+}
+
+@media only screen and (max-width: 767px){
+	.todo-header{
+		font-size: 75%;
+		// margin-bottom: 0;
+	}
+
+	.todo-list-container{
+		padding: 0.5rem;
+		max-height: 70vh;
+	}
+
+	.todo-item{
+		padding: 0.45rem;
+  }
+  
+  .item-col-1{
+		max-width: $md-col-1-width;
+	}
+
+	.todo-name{
+		width: 100/80 * 100%;
+		font-size: 98%;
+	}
+
+	.item-col-2{
+		width: 100% - $md-col-1-width;
+		align-items: flex-end;
+		justify-content: space-around;
+		padding: 0.3rem 0.15rem;
+	}
+
+	.empty-todo-list{
+		font-size: 105%;
+	}
+}
+
+@media only screen and (max-width: 480px){
+	.message,
+	.container{
+		width: 92vw;
+  }
+  
+  .todo-header{
+		font-size: 73%;
+	}
+
+	.todo-list-container{
+		padding: 0.3rem;
+	}
+
+	.todo-item{
+		padding: 0.35rem;
+	}
+}
+
+@media only screen and (min-width: 1920px){
+	.message,
+	.container{
+		width: 50vw;
 	}
 }

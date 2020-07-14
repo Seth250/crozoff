@@ -1,7 +1,9 @@
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 :root {
@@ -33,20 +35,216 @@
 .main-content {
   padding-top: 3.2rem;
   padding-bottom: 8rem;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-flow: column;
+  -webkit-box-pack: center;
+     -moz-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+     -moz-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+     -moz-box-orient: vertical;
+     -moz-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+
+.message,
+.container {
+  width: 56vw;
+}
+
+.message {
+  border: 1px solid transparent;
+  text-align: center;
+  padding: 1rem 0;
+  margin-bottom: 1rem;
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+.container {
+  border: 1px solid lightgrey;
+  border-radius: 3px;
+  background: #fafafa;
+  -webkit-box-shadow: 0.05rem 0.1rem 0.2rem 0 rgba(0, 0, 0, 0.6);
+          box-shadow: 0.05rem 0.1rem 0.2rem 0 rgba(0, 0, 0, 0.6);
+}
+
+.todo-header {
+  border-bottom: 1px solid lightgrey;
+  font-size: 90%;
+  text-align: center;
+  color: #1261A0;
+  padding: 0.8rem 0;
+  margin-bottom: 0.2rem;
+}
+
+.todo-list-container {
+  padding: 0.8rem;
+  overflow-y: auto;
+  max-height: 58vh;
+}
+
+.todo-list-container::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 4px;
+  background: whitesmoke;
+}
+
+.todo-list-container::-webkit-scrollbar-thumb {
+  border-radius: 3px;
+  background: rgba(28, 78, 127, 0.85);
+  -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+          box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+.todo-item {
+  border: 1px solid lightgrey;
+  border-radius: 4px;
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+     -moz-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 0.5rem 0.7rem;
+  margin-bottom: 0.85rem;
+}
+
+.item-col-1 {
+  width: 87.5%;
+}
+
+.item-col-2 {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+     -moz-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -ms-flex-pack: distribute;
+      justify-content: space-around;
+  width: 11%;
+}
+
+.todo-name {
+  font-size: 1.05em;
+  padding: 0.3rem 0;
+  text-transform: capitalize;
+}
+
+.todo-status {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+     -moz-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 0.35em 0.15em;
+  font-size: 90%;
+}
+
+.todo-status form {
+  margin-right: 0.65em;
+}
+
+.empty-todo-list {
+  padding: 1em 0;
+  text-align: center;
+  font-size: 1.2rem;
 }
 
 @media only screen and (max-width: 1024px) {
   .page-header {
     font-size: 90%;
   }
+  .message,
+  .container {
+    width: 75vw;
+  }
+  .todo-header {
+    font-size: 80%;
+  }
+  .todo-list-container::-webkit-scrollbar {
+    width: 3px;
+  }
 }
 
 @media only screen and (max-width: 768px) {
   .page-header {
     font-size: 80%;
+  }
+  .message,
+  .container {
+    width: 86vw;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .todo-header {
+    font-size: 75%;
+  }
+  .todo-list-container {
+    padding: 0.5rem;
+    max-height: 70vh;
+  }
+  .todo-item {
+    padding: 0.45rem;
+  }
+  .item-col-1 {
+    max-width: 80%;
+  }
+  .todo-name {
+    width: 125%;
+    font-size: 98%;
+  }
+  .item-col-2 {
+    width: 20%;
+    -webkit-box-align: end;
+       -moz-box-align: end;
+        -ms-flex-align: end;
+            align-items: flex-end;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    padding: 0.3rem 0.15rem;
+  }
+  .empty-todo-list {
+    font-size: 105%;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  .message,
+  .container {
+    width: 92vw;
+  }
+  .todo-header {
+    font-size: 73%;
+  }
+  .todo-list-container {
+    padding: 0.3rem;
+  }
+  .todo-item {
+    padding: 0.35rem;
+  }
+}
+
+@media only screen and (min-width: 1920px) {
+  .message,
+  .container {
+    width: 50vw;
   }
 }

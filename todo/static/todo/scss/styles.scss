@@ -4,35 +4,35 @@
 @import '_config';
 
 *{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 :root{
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
 }
 
 .page-wrapper{
-    position: relative;
-    min-height: 100vh;
-    font-family: $primary-font-stack;
+  position: relative;
+  min-height: 100vh;
+  font-family: $primary-font-stack;
 }
 
 .page-header{
-    background: $primary-background;
-    
-    h1{
-        padding: 1rem;
-        width: 90vw;
-        margin: 0 auto;
-    }
+  background: $primary-background;
+  
+  h1{
+    padding: 1rem;
+    width: 90vw;
+    margin: 0 auto;
+  }
 
-    a{
-        text-decoration: none;
-        color: $primary-color;
-    }
+  a{
+    text-decoration: none;
+    color: $primary-color;
+  }
 }
 
 .main-content{
@@ -47,11 +47,106 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	flex-flow: column;
+	flex-direction: column;
+}
+
+.message, 
+.container{
+	width: 56vw;
+}
+
+.message{
+	border: 1px solid transparent;
+	text-align: center;
+	padding: 1rem 0;
+	margin-bottom: 1rem;
+	border-radius: 5px;
+	font-weight: 500;
+	// box-shadow: 0 0 0.15rem 0 rgba(0, 0, 0, 0.6);
+}
+
+.container{
+	border: 1px solid lightgrey;
+	border-radius: $primary-border-radius;
+	background: #fafafa;
+	box-shadow: 0.05rem 0.1rem 0.2rem 0 rgba(0, 0, 0, 0.6);
+}
+
+.todo-header{
+	border-bottom: 1px solid lightgrey;
+	font-size: 90%;
+	// border-radius: $primary-border-radius;
+	text-align: center;
+	color: #1261A0;
+	padding: 0.8rem 0;
+	margin-bottom: 0.2rem;
+}
+
+.todo-list-container{
+	padding: 0.8rem;
+	overflow-y: auto;
+	max-height: 58vh;
+
+  &::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 4px;
+    background: whitesmoke;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: $primary-border-radius;
+    // background: rgba(18, 97, 160, 0.8);*/
+    background: rgba(28, 78, 127, 0.85);
+    // background-color: rgba(100,100,100,.5);
+    box-shadow: 0 0 1px rgba(255,255,255,.5);
+  }
+}
+
+.todo-item{
+	border: 1px solid lightgrey;
+	border-radius: 4px;
+	display: flex;
+	justify-content: space-between;
+	padding: 0.5rem 0.7rem;
+	margin-bottom: 0.85rem;
+}
+
+.item-col-1{
+	// border: 1px solid green;
+	width: 87.5%;
+}
+
+.item-col-2{
+	// border: 1px solid lightgrey;
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	width: 11%;
+}
+
+.todo-name{
+	// border: 1px solid green;
+	font-size: 1.05em;
+	padding: 0.3rem 0;
+	text-transform: capitalize;
+}
+
+.todo-status{
+	// border: 1px solid blue;
+	display: flex;
+	align-items: center;
+	padding: 0.35em 0.15em;
+  font-size: 90%;
+  
+  form{
+    margin-right: 0.65em;
+  }
+}
+
+.empty-todo-list{
+	padding: 1em 0;
+	text-align: center;
+	font-size: 1.2rem;
 }
 
 @import '_mobile';
-
-
-
-
