@@ -6,7 +6,15 @@ $sm-font-size: 95%;
 
 @media only screen and (max-width: 1024px){
 	.page-header{
-		font-size: 90%;
+    font-size: 90%;
+    
+    h1{
+      width: 25vw;
+    }
+
+    .search-input{
+      width: 36vw;
+    }
   }
 
   .message,
@@ -29,7 +37,7 @@ $sm-font-size: 95%;
 
 @media only screen and (max-width: 768px){
 	.page-header{
-		font-size: 80%;
+    font-size: 80%;
   }
     
   .message,
@@ -39,6 +47,24 @@ $sm-font-size: 95%;
 }
 
 @media only screen and (max-width: 767px){
+  .page-header{
+    font-size: 78%;
+    display: block;
+
+    h1{
+      width: 50vw;
+      padding: 0 0.5em 0.5em 0.5em;
+    }
+
+    .search-form{
+      margin-left: 1.5em;
+    }
+
+    .search-input{
+      width: 70vw;
+    }
+  }
+
 	.todo-header{
 		font-size: 75%;
 		// margin-bottom: 0;
@@ -140,11 +166,6 @@ $sm-font-size: 95%;
       font-size: $sm-font-size;
     }
   }
-
-	.input-box:focus{
-		box-shadow: 0.02rem 0.02rem 0.13rem 0 rgba(18, 97, 160, 0.7),
-					-0.02rem -0.02rem 0.13rem 0 rgba(18, 97, 160, 0.7);
-	}
 
 	.text-input{
 		width: 99%;
