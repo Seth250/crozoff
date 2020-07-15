@@ -2,3 +2,10 @@ $primary-font-stack: 'Roboto', sans-serif;
 $primary-background: #1C4E7F;
 $primary-color: #fafafa;
 $primary-border-radius: 3px;
+$secondary-background: #fafafa;
+
+@mixin default-flex-styles{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -21,6 +21,12 @@
 				<h1>
 					<a href="{% url 'todo:todo_list_create' %}">Todo App</a>
 				</h1>
+				<div class="search-form">
+					<form>
+						<input type="text" class="search-input" placeholder="Search.." />
+						<button type="submit" class="search-button"><i class="fas fa-search"></i></button>
+					</form>
+				</div>
 			</header>
 
 			<main role="main" class="main-content">
@@ -46,9 +52,9 @@
 										<form method="POST">
 											{% csrf_token %}
 											{% if todo.completed %}
-												<input type="checkbox" id="{{ todo.pk }}" checked />
+												<input type="checkbox" id="{{ todo.pk }}" title="Uncheck this todo" checked />
 											{% else %}
-												<input type="checkbox" id="{{ todo.pk }}" />
+												<input type="checkbox" id="{{ todo.pk }}" title="Check this todo" />
 											{% endif %}
 										</form>
 										<span class="{{ todo.get_due_info.class_tag }}">
@@ -65,12 +71,12 @@
 											<input type="checkbox" id="{{ todo.pk }}" />
 										{% endif %}
 									</form>#}
- -->							<a href="{% url 'todo:todo_edit' pk=todo.pk %}#form-container">
+ -->							<a href="{% url 'todo:todo_edit' pk=todo.pk %}#form-container" title="Edit this todo">
 										<i class="far fa-edit"></i>
 									</a>
 									<form method="POST" action="{% url 'todo:todo_delete' pk=todo.pk %}">
 										{% csrf_token %}
-										<button type="Submit" class="delete-button">
+										<button type="Submit" class="delete-button" title="Delete this todo">
 											<i class="far fa-trash-alt"></i>
 										</button>
 									</form>

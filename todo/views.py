@@ -31,7 +31,8 @@ class BaseTodoObjectView(View):
 		pending_todos = Todo.objects.filter(completed=False).order_by('-date_created')
 		total_pending = pending_todos.count()
 		completed_todos = Todo.objects.filter(completed=True).order_by('-date_completed')
-		todo_list = [*pending_todos, *completed_todos]
+		# todo_list = [*pending_todos, *completed_todos]
+		todo_list = [*completed_todos, *pending_todos]
 		context = {
 			'todo_list': todo_list,
 			'total_pending': total_pending,

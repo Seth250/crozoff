@@ -1,5 +1,8 @@
 $md-col-1-width: 80%;
+$md-font-size: 96%;
+
 $sm-col-1-width: 76%;
+$sm-font-size: 95%;
 
 @media only screen and (max-width: 1024px){
 	.page-header{
@@ -17,6 +20,10 @@ $sm-col-1-width: 76%;
 
 	.todo-list-container::-webkit-scrollbar{
 		width: 3px;
+  }
+  
+  .form-container{
+		padding: 1.2rem;
 	}
 }
 
@@ -51,7 +58,7 @@ $sm-col-1-width: 76%;
 	}
 
 	.todo-name{
-		width: 100/80 * 100%;
+		width: (100% / $md-col-1-width) * 100%;
 		font-size: 98%;
 	}
 
@@ -64,6 +71,33 @@ $sm-col-1-width: 76%;
 
 	.empty-todo-list{
 		font-size: 105%;
+  }
+  
+  .form-container{
+		padding: 1rem 0.8rem;
+    
+    label{
+		  font-size: $md-font-size;
+	  }
+
+	  li{
+      list-style: none;
+      color: red;
+    }
+  }
+
+	.text-input{
+		width: 90%;
+		font-size: $md-font-size;
+  }
+
+  .date-time-input{
+		font-size: 90%;
+		letter-spacing: 0.01em;
+	}
+
+	.save-button{
+		font-size: 90%;
 	}
 }
 
@@ -82,7 +116,49 @@ $sm-col-1-width: 76%;
 	}
 
 	.todo-item{
-		padding: 0.35rem;
+    padding: 0.35rem;
+  }
+  
+  .item-col-1{
+		max-width: $sm-col-1-width;
+	}
+
+	.todo-name{
+		width: (100% / $sm-col-1-width) * 100%;
+		font-size: 96%;
+		padding: 0.35rem 0;
+	}
+
+	.item-col-2{
+		width: 100% - $sm-col-1-width;
+  }
+  
+  .form-container{
+    padding: 1rem 0.6rem;
+    
+    label{
+      font-size: $sm-font-size;
+    }
+  }
+
+	.input-box:focus{
+		box-shadow: 0.02rem 0.02rem 0.13rem 0 rgba(18, 97, 160, 0.7),
+					-0.02rem -0.02rem 0.13rem 0 rgba(18, 97, 160, 0.7);
+	}
+
+	.text-input{
+		width: 99%;
+		font-size: $sm-font-size;
+  }
+  
+  .date-time-input{
+		// width: 15em;
+		font-size: 85%;
+	}
+
+	.save-button{
+		font-size: 85%;
+		padding: 0.57rem 0;
 	}
 }
 
