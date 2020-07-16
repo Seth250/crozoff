@@ -12,7 +12,7 @@ $sm-font-size: 95%;
       width: 25vw;
     }
 
-    .search-input{
+    .search-form{
       width: 36vw;
     }
   }
@@ -38,6 +38,14 @@ $sm-font-size: 95%;
 @media only screen and (max-width: 768px){
 	.page-header{
     font-size: 80%;
+
+    .search-form{
+      width: 45vw;
+    }
+
+    .search-input{
+      font-size: 0.95rem;
+    }
   }
     
   .message,
@@ -49,19 +57,9 @@ $sm-font-size: 95%;
 @media only screen and (max-width: 767px){
   .page-header{
     font-size: 78%;
-    display: block;
-
-    h1{
-      width: 50vw;
-      padding: 0 0.5em 0.5em 0.5em;
-    }
 
     .search-form{
-      margin-left: 1.5em;
-    }
-
-    .search-input{
-      width: 70vw;
+      width: 50vw;
     }
   }
 
@@ -128,6 +126,25 @@ $sm-font-size: 95%;
 }
 
 @media only screen and (max-width: 480px){
+  .page-header{
+    flex-direction: column;
+    align-items: flex-start;
+
+    h1{
+      padding: 0 0.5em 0.5em;
+      width: 50vw;
+    }
+
+    .search-form{
+      width: 80vw;
+      margin-left: 1.25em;
+    }
+
+    .search-input{
+      font-size: 0.92rem;
+    }
+  }
+
 	.message,
 	.container{
 		width: 92vw;
