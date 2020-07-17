@@ -40,9 +40,9 @@
 					<div class="todo-header">
 						<h2> You have {{ total_pending }} Pending Todos </h2>
 					</div>
-					<div class="todo-list-container">
+					<div class="todo-list-container" id="todo-list-container">
 						{% for todo in todo_list %}
-							<div class="todo-item">
+							<div class="todo-item" data-order-pk="{{ todo.order }}-{{ todo.pk }}" draggable="true">
 								<div class="item-col-1">
 									<div class="todo-name {% if todo.completed %}strike{% endif %}">
 										{{ todo }}
@@ -51,9 +51,9 @@
 										<form method="POST">
 											{% csrf_token %}
 											{% if todo.completed %}
-												<input type="checkbox" id="{{ todo.pk }}" title="Uncheck this todo" checked />
+												<input type="checkbox" data-pk="{{ todo.pk }}" title="Uncheck this todo" checked />
 											{% else %}
-												<input type="checkbox" id="{{ todo.pk }}" title="Check this todo" />
+												<input type="checkbox" data-pk="{{ todo.pk }}" title="Check this todo" />
 											{% endif %}
 										</form>
 										<span class="{{ todo.get_due_info.class_tag }}">

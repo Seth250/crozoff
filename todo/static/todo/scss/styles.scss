@@ -156,6 +156,7 @@
 	padding: 0.5rem 0.7rem;
   margin-bottom: 0.85rem;
   box-shadow: 0.025rem 0.025rem 0.1rem 0 rgba(0, 0, 0, 0.6);
+  cursor: move;
 }
 
 .item-col-1{
@@ -401,6 +402,10 @@ input[type="checkbox"]{
 
 .hide{
   display: none;
+}
+
+.dragging{
+  opacity: 0.5;
 }
 
 
