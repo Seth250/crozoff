@@ -46,11 +46,12 @@
   }
 
   .search-form{
-    // height: 2.2rem;
-    padding: 0.5em 0.12em;
+    height: 2.2rem;
+    @include default-flex-styles;
+    padding: 0 0.1em;
     width: 28vw;
     border: 1px solid transparent;
-    border-radius: 0.25rem;
+    border-radius: $secondary-border-radius;
     background: $secondary-background;
 
     &:focus-within{
@@ -62,9 +63,9 @@
   .search-input{
     border: 0;
     // border: 1px solid black;
-    width: 90.5%;
+    padding: 0 0.2em;
+    width: 90%;
     font: 0.98rem $primary-font-stack;
-    padding: 0 0.5em;
     background: transparent;
 
     &:focus{
@@ -73,19 +74,20 @@
   }
 
   .fa-search{
-    width: 7.5%;
+    width: 8%;
     text-align: center;
     font-size: 105%;
     color: $primary-background;
+    // border: 1px solid red;
   }
 }
 
 .main-content{
-    // reason why you're explicitly setting the top and bottom padding is because you want a footer 
-    // that adapts to the page content
-    // the bottom padding is actually the important piece, that's why you're not using the syntax shorthand 
-    // form for the padding and also, the reason why the bottom padding is 8rem is because the footer's 
-    // height is 4.8rem and since the padding that you previously chose was 3.2rem, 3.2 + 4.8 = 8rem. durrh
+  // reason why you're explicitly setting the top and bottom padding is because you want a footer 
+  // that adapts to the page content
+  // the bottom padding is actually the important piece, that's why you're not using the syntax shorthand 
+  // form for the padding and also, the reason why the bottom padding is 8rem is because the footer's 
+  // height is 4.8rem and since the padding that you previously chose was 3.2rem, 3.2 + 4.8 = 8rem. durrh
 	padding-top: 3.2rem;
 	padding-bottom: 8rem; 
   // padding: 3.2rem 0;
@@ -95,7 +97,8 @@
 
 .message, 
 .container{
-	width: 55vw;
+  width: 54vw;
+  border-radius: $primary-border-radius;
 }
 
 .message{
@@ -103,32 +106,32 @@
 	text-align: center;
 	padding: 1rem 0;
 	margin-bottom: 1rem;
-	border-radius: 5px;
 	font-weight: 500;
 	// box-shadow: 0 0 0.15rem 0 rgba(0, 0, 0, 0.6);
 }
 
 .container{
 	border: 1px solid lightgrey;
-	border-radius: $primary-border-radius;
 	background: $secondary-background;
-	box-shadow: 0.05rem 0.1rem 0.2rem 0 rgba(0, 0, 0, 0.6);
+	box-shadow: 0.05rem 0.075rem 0.2rem 0 rgba(0, 0, 0, 0.6);
 }
 
 .todo-header{
 	border-bottom: 1px solid lightgrey;
-	font-size: 90%;
-	// border-radius: $primary-border-radius;
+  font-size: 90%;
+  border-top-left-radius: $primary-border-radius;
+  border-top-right-radius: $primary-border-radius;
 	text-align: center;
 	color: #1261A0;
-	padding: 0.8rem 0;
-	margin-bottom: 0.2rem;
+	padding: 0.9rem 0;
+  margin-bottom: 0.2rem;
+  box-shadow: 0 0.025rem 0.15rem 0 rgba(0, 0, 0, 0.6);
 }
 
 .todo-list-container{
 	padding: 0.8rem;
 	overflow-y: auto;
-	max-height: 58vh;
+  max-height: 58vh;
 
   &::-webkit-scrollbar {
     -webkit-appearance: none;
@@ -137,7 +140,7 @@
   }
 
   &::-webkit-scrollbar-thumb {
-    border-radius: $primary-border-radius;
+    border-radius: 3px;
     // background: rgba(18, 97, 160, 0.8);
     background: rgba(28, 78, 127, 0.85);
     // background-color: rgba(100,100,100,.5);
@@ -147,11 +150,12 @@
 
 .todo-item{
 	border: 1px solid lightgrey;
-	border-radius: 4px;
+	border-radius: $primary-border-radius;
 	display: flex;
 	justify-content: space-between;
 	padding: 0.5rem 0.7rem;
-	margin-bottom: 0.85rem;
+  margin-bottom: 0.85rem;
+  box-shadow: 0.025rem 0.025rem 0.1rem 0 rgba(0, 0, 0, 0.6);
 }
 
 .item-col-1{
@@ -193,7 +197,7 @@
 }
 
 .form-container{
-	border-top: 1px solid lightgrey;
+	border-top: 2px solid lightgrey;
 	// padding: 1rem 2rem;
   padding: 1.5rem;
   
@@ -208,7 +212,7 @@
 	// border: 1px solid #3895D3;
 	border: 1px solid #1261A0;
 	padding: 0.6em;
-	border-radius: 0.3rem;
+	border-radius: $secondary-border-radius;
 	font-family: $primary-font-stack;
 	margin-bottom: 0.8rem;
 	color: black;
@@ -253,7 +257,7 @@
 	cursor: pointer;
 	width: 10em;
 	padding: 0.55em 0;
-	border-radius: 0.3rem;
+	border-radius: $secondary-border-radius;
 	background: #1f588f;
   // background: #017192;
   // background: #f5f5f5;
@@ -290,6 +294,8 @@
 .complete{
   // border: 1px solid black;
   margin-bottom: 0.05em;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .overdue{

@@ -28,11 +28,15 @@ class BaseTodoObjectView(View):
 	def get(self, request, *args, **kwargs):
 		obj = self.get_object()
 		form = self.form_class(instance=obj)
-		pending_todos = Todo.objects.filter(completed=False).order_by('-date_created')
-		total_pending = pending_todos.count()
-		completed_todos = Todo.objects.filter(completed=True).order_by('-date_completed')
+		total_pending = Todo.objects.filter(completed=False).count()
+		todo_list = Todo.objects.all().order_by('order');
+		# pending_todos = Todo.objects.filter(completed=False).order_by('-date_created')
+		# completed_todos = Todo.objects.filter(completed=True).order_by('-date_completed')
 		# todo_list = [*pending_todos, *completed_todos]
-		todo_list = [*completed_todos, *pending_todos]
+		# todo_list = [*completed_todos, *pending_todos]
+		for todo in todo_list:
+			print(todo.order)
+
 		context = {
 			'todo_list': todo_list,
 			'total_pending': total_pending,

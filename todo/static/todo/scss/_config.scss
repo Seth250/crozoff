@@ -1,8 +1,9 @@
 $primary-font-stack: 'Roboto', sans-serif;
 $primary-background: #1C4E7F;
-$primary-color: #fafafa;
-$primary-border-radius: 3px;
 $secondary-background: #fafafa;
+$primary-color: #fafafa;
+$primary-border-radius: 4px;
+$secondary-border-radius: 0.3rem;
 
 @mixin default-flex-styles{
   display: flex;

@@ -1,11 +1,12 @@
 
-function submitCheckboxForm(checkbox){
+function submitCheckboxForm(event){
 	/* checkbox is disabled after the initial click to prevent subsequent clicks until the form
 	   is submiited */
-	checkbox.disabled = true;
-	let todo_pk = checkbox.id;
-	checkbox.form.action = `${todo_pk}/${checkbox.checked ? 'check' : 'uncheck'}/`;
-	checkbox.form.submit();
+	const checkboxElem = event.target;
+	const todo_pk = checkboxElem.id;
+	checkboxElem.form.action = `${todo_pk}/${checkboxElem.checked ? 'check' : 'uncheck'}/`;
+	// checkbox.disabled = true;
+	checkboxElem.form.submit();
 }
 
 function disableSaveButton(){
@@ -31,11 +32,9 @@ function initialize(){
 	const searchBox = document.querySelector('.search-input');
 	searchBox.addEventListener('keyup', searchTodos, false);
 
-	let elements = document.querySelectorAll("input[type='checkbox']");
-	elements.forEach((checkbox) => {
-		checkbox.addEventListener('click', function(){
-			submitCheckboxForm(checkbox); // try using e.target blah blah
-		}, false);
+	const checkboxes = document.querySelectorAll("input[type='checkbox']");
+	checkboxes.forEach((checkbox) => {
+		checkbox.addEventListener('click', submitCheckboxForm, false);
 	})
 
 	const todoForm = document.getElementById('todo-form');
