@@ -51,7 +51,7 @@
     padding: 0 0.1em;
     width: 28vw;
     border: 1px solid transparent;
-    border-radius: $secondary-border-radius;
+    border-radius: 1.1rem;
     background: $secondary-background;
 
     &:focus-within{
@@ -73,11 +73,12 @@
     }
   }
 
-  .fa-search{
+  .search-icon{
     width: 8%;
     text-align: center;
     font-size: 105%;
     color: $primary-background;
+    // transform: rotate(90deg);
     // border: 1px solid red;
   }
 }
@@ -130,7 +131,7 @@
 
 .todo-list-container{
 	padding: 0.8rem;
-	overflow-y: auto;
+  overflow-y: auto;
   max-height: 58vh;
 
   &::-webkit-scrollbar {

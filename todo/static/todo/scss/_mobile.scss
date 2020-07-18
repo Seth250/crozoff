@@ -23,7 +23,7 @@ $sm-font-size: 95%;
   }
   
   .todo-header{
-		font-size: 80%;
+		font-size: 84%;
 	}
 
 	.todo-list-container::-webkit-scrollbar{
@@ -37,7 +37,7 @@ $sm-font-size: 95%;
 
 @media only screen and (max-width: 768px){
 	.page-header{
-    font-size: 80%;
+    font-size: 84%;
 
     .search-form{
       width: 45vw;
@@ -47,7 +47,7 @@ $sm-font-size: 95%;
       font-size: 0.95rem;
     }
 
-    .fa-search{
+    .search-icon{
       font-size: 106%;
     }
   }
@@ -58,17 +58,52 @@ $sm-font-size: 95%;
 	}
 }
 
-@media only screen and (max-width: 767px){
+@media only screen and (max-width: 600px){
   .page-header{
-    font-size: 78%;
+    font-size: 80%;
 
+    h1{
+      width: 45vw;
+      transition: all 0.3s ease;
+    }
+
+    .heading-collapse-mobile{
+      width: 3vw;
+      font-size: 1px;
+      transform: scaleX(0);
+    }
+    
     .search-form{
-      width: 50vw;
+      width: 2.2rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-open-mobile{
+      width: 75vw;
+      transform: translateX(-10%);
+      // width: 60vw;
+    }
+
+    .search-input{
+      font-size: 0.92rem;
+      width: 90%;
+      transition: all 0.3s ease;
+    }
+
+    .input-collapse-mobile{
+      width: 0%;
+      padding: 0;
+    }
+
+    .search-icon{
+      font-size: 110%;
+      padding-top: 0.06em;
+      width: 25px;
     }
   }
 
 	.todo-header{
-		font-size: 75%;
+		font-size: 80%;
 		// margin-bottom: 0;
 	}
 
@@ -87,8 +122,12 @@ $sm-font-size: 95%;
 
 	.todo-name{
 		width: (100% / $md-col-1-width) * 100%;
-		font-size: 98%;
-	}
+    font-size: 101%;
+  }
+  
+  .todo-status{
+    font-size: 89%;
+  }
 
 	.item-col-2{
 		width: 100% - $md-col-1-width;
@@ -126,30 +165,19 @@ $sm-font-size: 95%;
 
 	.save-button{
 		font-size: 90%;
-	}
+  }
 }
 
 @media only screen and (max-width: 480px){
   .page-header{
-    flex-direction: column;
-    align-items: flex-start;
-
-    h1{
-      padding: 0 0.5em 0.5em;
-      width: 50vw;
-    }
+    font-size: 78%;
 
     .search-form{
-      width: 80vw;
-      margin-left: 1.25em;
+      padding: 0 0.4em;
     }
 
     .search-input{
-      font-size: 0.92rem;
-    }
-
-    .fa-search{
-      font-size: 110%;
+      font-size: 0.9rem;
     }
   }
 
@@ -159,7 +187,7 @@ $sm-font-size: 95%;
   }
   
   .todo-header{
-		font-size: 73%;
+		font-size: 74%;
 	}
 
 	.todo-list-container{
@@ -176,9 +204,13 @@ $sm-font-size: 95%;
 
 	.todo-name{
 		width: (100% / $sm-col-1-width) * 100%;
-		font-size: 96%;
-		padding: 0.35rem 0;
-	}
+    padding: 0.35rem 0;
+    font-size: $sm-font-size;
+  }
+  
+  .todo-status{
+    font-size: 86%;
+  }
 
 	.item-col-2{
 		width: 100% - $sm-col-1-width;
@@ -205,7 +237,11 @@ $sm-font-size: 95%;
 	.save-button{
 		font-size: 85%;
 		padding: 0.57rem 0;
-	}
+  }
+    
+  .page-footer{
+    font-size: 96%;
+  }
 }
 
 @media only screen and (min-width: 1920px){

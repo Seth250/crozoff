@@ -14,17 +14,6 @@ function disableSaveButton(){
 	saveButton.disabled = true;
 }
 
-function updateTodoPosition(event){
-	event.preventDefault();
-	const currentDrag = document.querySelector('.dragging');
-	const afterElement = getElementAfterCurrentDrag(event.clientY);
-	if (afterElement){
-		this.insertBefore(currentDrag, afterElement);
-	} else{
-		this.appendChild(currentDrag);
-	}
-}
-
 function getElementAfterCurrentDrag(yPosition){
 	const draggableElements = [...document.querySelectorAll("[draggable='true']:not(.dragging)")];
 	return draggableElements.reduce((closest, child) => {
@@ -38,17 +27,39 @@ function getElementAfterCurrentDrag(yPosition){
 	}, { defaultOffset: Number.NEGATIVE_INFINITY }).element;
 }
 
+function updateTodoPosition(event){
+	event.preventDefault();
+	const currentDrag = document.querySelector('.dragging');
+	const afterElement = getElementAfterCurrentDrag(event.clientY);
+	if (afterElement){
+		this.insertBefore(currentDrag, afterElement);
+	} else{
+		this.appendChild(currentDrag);
+	}
+}
+
 function searchTodos(event){
 	const searchText = event.target.value.toLowerCase()
 	const todoItems = [...document.querySelectorAll('.todo-name')];
 	todoItems.forEach((item) => {
 		const itemText = item.textContent.toLowerCase();
+		const elem = item.parentElement.parentElement;
 		if (itemText.indexOf(searchText) === -1){
-			item.parentElement.parentElement.classList.add('hide');
+			elem.classList.add('hide');
 		} else{
-			item.parentElement.parentElement.classList.remove('hide');
+			elem.classList.remove('hide');
 		}
 	})
+}
+
+function mobileSearchBarToggle(event){
+	event.target.classList.toggle('fa-search');
+	event.target.classList.toggle('fa-arrow-left');
+	document.querySelector('.page-header h1').classList.toggle('heading-collapse-mobile');
+	document.querySelector('.search-form').classList.toggle('form-open-mobile');
+	const searchInput = document.querySelector('.search-input');
+	searchInput.classList.toggle('input-collapse-mobile');
+	searchInput.focus();
 }
 
 function initialize(){
@@ -71,7 +82,12 @@ function initialize(){
 		}, false);
 	})
 	const todoContainer = document.getElementById('todo-list-container');
-	todoContainer.addEventListener('dragover', updateTodoPosition, false)
+	todoContainer.addEventListener('dragover', updateTodoPosition, false);
+
+	if (window.matchMedia("(max-width: 600px)").matches){
+		const searchIcon = document.querySelector('.search-icon');
+		searchIcon.addEventListener('click', mobileSearchBarToggle, false);
+	}
 
 	const todoForm = document.getElementById('todo-form');
 	todoForm.addEventListener('submit', disableSaveButton, false);
