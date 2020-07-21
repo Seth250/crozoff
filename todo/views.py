@@ -3,6 +3,8 @@ from .models import Todo
 from .forms import TodoForm
 from django.utils import timezone
 from django.contrib import messages
+from django.http import HttpResponse
+import json
 from django.urls import reverse
 from django.views.generic import (
 	View,
@@ -34,8 +36,6 @@ class BaseTodoObjectView(View):
 		# completed_todos = Todo.objects.filter(completed=True).order_by('-date_completed')
 		# todo_list = [*pending_todos, *completed_todos]
 		# todo_list = [*completed_todos, *pending_todos]
-		for todo in todo_list:
-			print(todo.order)
 
 		context = {
 			'todo_list': todo_list,
@@ -99,3 +99,17 @@ class TodoUncheckView(UpdateView):
 		obj.save()
 		messages.info(self.request, self.info_message)
 		return redirect("todo:todo_list_create")
+
+
+class TodoOrderSaveView(View):
+	model = Todo
+
+	def post(self, request, *args, **kwargs):
+		if request.is_ajax():
+			todo_data = json.loads(request.body)
+			for data in todo_data:
+				obj = get_object_or_404(self.model, pk=data['pk'])
+				obj.order = data['order']
+				obj.save()
+
+			return HttpResponse('saved')

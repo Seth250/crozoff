@@ -38,11 +38,14 @@
 				{% endif %}
 				<div class="container">
 					<div class="todo-header">
-						<h2> You have {{ total_pending }} Pending Todos </h2>
+						<h2> 
+							<span>You have {{ total_pending }} Pending Todos</span>
+							<i class="fas fa-arrows-alt move-icon" title="Enable Todo re-arrangement"></i>
+						</h2>
 					</div>
 					<div class="todo-list-container" id="todo-list-container">
 						{% for todo in todo_list %}
-							<div class="todo-item" data-order-pk="{{ todo.order }}-{{ todo.pk }}" draggable="true">
+							<div class="todo-item" data-order="{{ todo.pk }}-{{ todo.order }}">
 								<div class="item-col-1">
 									<div class="todo-name {% if todo.completed %}strike{% endif %}">
 										{{ todo }}

@@ -8,10 +8,8 @@ function submitCheckboxForm(){
 	// this.form.submit();
 }
 
-function disableSaveButton(){
-	let saveButton = document.getElementById('save-button');
-	// save button is disabled to prevent multiple form submissions
-	saveButton.disabled = true;
+function getCsrfToken(){
+	return document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 }
 
 function getElementAfterCurrentDrag(yPosition){
@@ -53,13 +51,66 @@ function searchTodos(event){
 }
 
 function mobileSearchBarToggle(event){
-	event.target.classList.toggle('fa-search');
-	event.target.classList.toggle('fa-arrow-left');
-	document.querySelector('.page-header h1').classList.toggle('heading-collapse-mobile');
-	document.querySelector('.search-form').classList.toggle('form-open-mobile');
-	const searchInput = document.querySelector('.search-input');
-	searchInput.classList.toggle('input-collapse-mobile');
-	searchInput.focus();
+	if (window.matchMedia("(max-width: 600px)").matches){
+		event.target.classList.toggle('fa-search');
+		event.target.classList.toggle('fa-arrow-left');
+		document.querySelector('.page-header h1').classList.toggle('heading-collapse-mobile');
+		document.querySelector('.search-form').classList.toggle('form-open-mobile');
+		const searchInput = document.querySelector('.search-input');
+		searchInput.classList.toggle('input-collapse-mobile');
+		searchInput.focus();
+	}
+}
+
+function dragStartHandler(){
+	this.classList.add('dragging');
+}
+
+function dragEndHandler(){
+	this.classList.remove('dragging');
+	this.style.transition = 'all 0.3s ease-in';
+}
+
+function todoArrangementToggle(event){
+	const todoElems = document.querySelectorAll('.todo-item');
+	const todoContainer = document.getElementById('todo-list-container');
+	if (event.target.classList.contains('fas')){
+		event.target.classList.remove('fas', 'fa-arrows-alt');
+		event.target.classList.add('far', 'fa-save');
+		event.target.setAttribute('title', 'Save Your Changes');
+		todoElems.forEach((elem) => {
+			elem.setAttribute('draggable', 'true');
+			elem.classList.add('draggable');
+			elem.addEventListener('dragstart', dragStartHandler, false);
+			elem.addEventListener('dragend', dragEndHandler, false);
+		})
+		todoContainer.addEventListener('dragover', updateTodoPosition, false);
+	} else{
+		event.target.classList.remove('far', 'fa-save');
+		event.target.classList.add('fas', 'fa-arrows-alt');
+		event.target.setAttribute('title', 'Enable Todo re-arrangement');
+		const todoOrderArr = [];
+		todoElems.forEach((elem, index) => {
+			const pk = parseInt(elem.getAttribute('data-order').split('-')[0]);
+			todoOrderArr.push({pk, order: index}); // pk in this object, is the same thing as saying pk: pk
+			elem.setAttribute('data-order', `${pk}-${index}`);
+			elem.removeAttribute('draggable');
+			elem.classList.remove('draggable');
+			elem.removeEventListener('dragstart', dragStartHandler, false);
+			elem.removeEventListener('dragend', dragEndHandler, false);
+		})
+		todoContainer.removeEventListener('dragover', updateTodoPosition, false);
+		fetch('save-order/', {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-type': 'application/json',
+				'X-Requested-With': 'XMLHttpRequest',
+				'X-CSRFToken': getCsrfToken(),
+			},
+			body: JSON.stringify(todoOrderArr)
+		}).catch((err) => console.log(err));
+	}
 }
 
 function initialize(){
@@ -70,27 +121,15 @@ function initialize(){
 	checkboxes.forEach((checkbox) => {
 		checkbox.addEventListener('click', submitCheckboxForm, false);
 	})
+	
+	const searchIcon = document.querySelector('.search-icon');
+	searchIcon.addEventListener('click', mobileSearchBarToggle, false);
 
-	const draggables = document.querySelectorAll('[draggable="true"]');
-	draggables.forEach((draggable) => {
-		draggable.addEventListener('dragstart', function(){
-			this.classList.add('dragging');
-		}, false);
-		draggable.addEventListener('dragend', function(){
-			this.classList.remove('dragging');
-			this.style.transition = 'all 0.3s ease-in';
-		}, false);
-	})
-	const todoContainer = document.getElementById('todo-list-container');
-	todoContainer.addEventListener('dragover', updateTodoPosition, false);
+	const moveIcon = document.querySelector('.move-icon');
+	moveIcon.addEventListener('click', todoArrangementToggle, false);
 
-	if (window.matchMedia("(max-width: 600px)").matches){
-		const searchIcon = document.querySelector('.search-icon');
-		searchIcon.addEventListener('click', mobileSearchBarToggle, false);
-	}
-
-	const todoForm = document.getElementById('todo-form');
-	todoForm.addEventListener('submit', disableSaveButton, false);
+	// const todoForm = document.getElementById('todo-form');
+	// todoForm.addEventListener('submit', disableSaveButton, false);
 }
 
 window.addEventListener('load', initialize, false);

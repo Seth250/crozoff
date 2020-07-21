@@ -1,7 +1,7 @@
 $md-col-1-width: 80%;
 $md-font-size: 96%;
 
-$sm-col-1-width: 76%;
+$sm-col-1-width: 74%;
 $sm-font-size: 95%;
 
 @media only screen and (max-width: 1024px){
@@ -187,7 +187,7 @@ $sm-font-size: 95%;
   }
   
   .todo-header{
-		font-size: 74%;
+		font-size: 75%;
 	}
 
 	.todo-list-container{
@@ -195,7 +195,7 @@ $sm-font-size: 95%;
 	}
 
 	.todo-item{
-    padding: 0.35rem;
+    padding: 0.4rem 0.35rem;
   }
   
   .item-col-1{
@@ -203,8 +203,9 @@ $sm-font-size: 95%;
 	}
 
 	.todo-name{
-		width: (100% / $sm-col-1-width) * 100%;
-    padding: 0.35rem 0;
+    // border: 1px solid black;
+    width: (100% / $sm-col-1-width) * 100%;
+    margin-bottom: 0.2em;
     font-size: $sm-font-size;
   }
   
@@ -230,7 +231,7 @@ $sm-font-size: 95%;
   }
   
   .date-time-input{
-		// width: 15em;
+		width: 14.5rem;
 		font-size: 85%;
 	}
 
@@ -241,6 +242,19 @@ $sm-font-size: 95%;
     
   .page-footer{
     font-size: 96%;
+  }
+}
+
+@media only screen and (max-width: 280px){
+  .todo-header{
+    h2{
+      span{
+        margin: 0 0.4em;
+      }
+      .move-icon{
+        position: static;
+      }
+    }
   }
 }
 

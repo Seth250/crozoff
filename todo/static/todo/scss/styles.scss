@@ -122,11 +122,28 @@
   font-size: 90%;
   border-top-left-radius: $primary-border-radius;
   border-top-right-radius: $primary-border-radius;
-	text-align: center;
+  // text-align: center;
 	color: #1261A0;
 	padding: 0.9rem 0;
   margin-bottom: 0.2rem;
   box-shadow: 0 0.025rem 0.15rem 0 rgba(0, 0, 0, 0.6);
+
+  h2{
+    position: relative;
+    // border: 1px solid red;
+    @include default-flex-styles;
+
+    .move-icon{
+      border: 1px solid lightgrey;
+      border-radius: $primary-border-radius;
+      background: #fff;
+      position: absolute;
+      right: 3%;
+      padding: 0.2em;
+      font-size: 92%;
+      cursor: pointer;
+    }
+  }
 }
 
 .todo-list-container{
@@ -157,7 +174,6 @@
 	padding: 0.5rem 0.7rem;
   margin-bottom: 0.85rem;
   box-shadow: 0.025rem 0.025rem 0.1rem 0 rgba(0, 0, 0, 0.6);
-  cursor: move;
 }
 
 .item-col-1{
@@ -185,7 +201,8 @@
 	display: flex;
 	align-items: center;
 	padding: 0.4em 0.3em;
-  font-size: 90%;
+  font-size: 92%;
+  letter-spacing: 0.01em;
   
   form{
     margin-right: 0.65em;
@@ -331,7 +348,7 @@
 .fa-edit{
 	// color: #1261A0;
 	color: #0d5aa7;
-	font-size: 108%;
+	font-size: 109%;
 }
 
 input[type="checkbox"]{
@@ -403,6 +420,10 @@ input[type="checkbox"]{
 
 .hide{
   display: none;
+}
+
+.draggable{
+  cursor: move;
 }
 
 .dragging{
