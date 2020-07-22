@@ -3,7 +3,8 @@ from .models import Todo
 from .forms import TodoForm
 from django.utils import timezone
 from django.contrib import messages
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from django.db import transaction
 import json
 from django.urls import reverse
 from django.views.generic import (
@@ -35,23 +36,40 @@ class BaseTodoObjectView(View):
 		# pending_todos = Todo.objects.filter(completed=False).order_by('-date_created')
 		# completed_todos = Todo.objects.filter(completed=True).order_by('-date_completed')
 		# todo_list = [*pending_todos, *completed_todos]
-		# todo_list = [*completed_todos, *pending_todos]
 
-		context = {
-			'todo_list': todo_list,
-			'total_pending': total_pending,
-			'form': form
-		}
+		if request.is_ajax():
+			print('ajax')
+			return HttpResponse('ok')
+			
+		else:
+			context = {
+				'todo_list': todo_list,
+				'total_pending': total_pending,
+				'form': form
+			}
 
-		return render(request, self.template_name, context)
+			return render(request, self.template_name, context)
 
 	def post(self, request, *args, **kwargs):
 		obj = self.get_object()
-		form = self.form_class(data=request.POST, instance=obj)
-		if form.is_valid():
-			form.save()
-			messages.success(request, self.success_message)
-			return redirect("todo:todo_list_create")
+		form_data = json.loads(request.body)
+		form = self.form_class(data=form_data, instance=obj)
+		if request.is_ajax() and form.is_valid():
+			todo_instance = form.save(commit=False)
+			if not obj:
+				todo_dict = todo_instance.__dict__
+				todo_dict.pop('_state')
+				todo_dict['message'] = self.success_message
+				todo_dict.update(todo_instance.get_due_info())
+				return JsonResponse(todo_dict)
+
+			else:
+				pass
+		# form = self.form_class(data=request.POST, instance=obj)
+		# if form.is_valid():
+		# 	form.save()
+		# 	messages.success(request, self.success_message)
+		# 	return redirect("todo:todo_list_create")
 
 
 class TodoListCreateView(BaseTodoObjectView):
@@ -75,6 +93,7 @@ class TodoDeleteView(DeleteView):
 		return super(TodoDeleteView, self).delete(request, *args, **kwargs)
 
 
+# You don't need all these Generic views
 class TodoCheckView(UpdateView):
 	model = Todo
 	info_message = 'Status has been Changed to Completed!'
@@ -107,9 +126,10 @@ class TodoOrderSaveView(View):
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
 			todo_data = json.loads(request.body)
-			for data in todo_data:
-				obj = get_object_or_404(self.model, pk=data['pk'])
-				obj.order = data['order']
-				obj.save()
+			with transaction.atomic():
+				for data in todo_data:
+					obj = get_object_or_404(self.model, pk=data['pk'])
+					obj.order = data['order']
+					obj.save()
 
 			return HttpResponse('saved')

@@ -73,7 +73,7 @@
 											<input type="checkbox" id="{{ todo.pk }}" />
 										{% endif %}
 									</form>#}
- -->							<a href="{% url 'todo:todo_edit' pk=todo.pk %}#form-container" title="Edit this todo">
+ -->							<a href="{% url 'todo:todo_edit' pk=todo.pk %}" title="Edit this todo">
 										<i class="far fa-edit"></i>
 									</a>
 									<form method="POST" action="{% url 'todo:todo_delete' pk=todo.pk %}">
@@ -95,6 +95,7 @@
 							{% csrf_token %}
 							{{ form.as_p }}
 							<button type="submit" class="save-button" id="save-button">Save Todo</button>
+							<!-- remove save button id if you don't need it -->
 						</form>
 					</div>
 				</div>

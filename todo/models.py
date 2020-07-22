@@ -8,7 +8,7 @@ class Todo(models.Model):
 	item = models.CharField(max_length=100, verbose_name="todo item")
 	completed = models.BooleanField(default=False)
 	due_date = models.DateTimeField(verbose_name="due date")
-	order = models.PositiveIntegerField()
+	order = models.PositiveIntegerField(default=0)
 	date_created = models.DateTimeField(auto_now_add=True)
 	# date_updated = models.DateTimeField(auto_now=True)
 	date_completed = models.DateTimeField(blank=True, null=True)

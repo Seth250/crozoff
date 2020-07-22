@@ -1,7 +1,7 @@
 
 def format_time(time, unit):
 	time = int(time)
-	return f"{time} {unit}{'s' if time > 1 else ''}"
+	return f"{time} {unit}{'s' if time != 1 else ''}"
 
 def convert_date_time(date_time):
 	date_time = str(date_time).split(",")
