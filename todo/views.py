@@ -17,6 +17,7 @@ from django.views.generic import (
 
 class BaseTodoObjectView(View):
 	success_message = None
+	model = Todo
 	template_name = 'todo/index.html'
 	form_class = TodoForm
 
@@ -31,15 +32,16 @@ class BaseTodoObjectView(View):
 	def get(self, request, *args, **kwargs):
 		obj = self.get_object()
 		form = self.form_class(instance=obj)
-		total_pending = Todo.objects.filter(completed=False).count()
-		todo_list = Todo.objects.all().order_by('order');
+		total_pending = self.model.objects.filter(completed=False).count()
+		todo_list = self.model.objects.all().order_by('order');
 		# pending_todos = Todo.objects.filter(completed=False).order_by('-date_created')
 		# completed_todos = Todo.objects.filter(completed=True).order_by('-date_completed')
 		# todo_list = [*pending_todos, *completed_todos]
 
-		if request.is_ajax():
-			print('ajax')
-			return HttpResponse('ok')
+		# if it is an ajax request and we want to get the data for an object
+		if request.is_ajax() and obj:
+			response_dict = {field.name: field.value() for field in form}
+			return JsonResponse(response_dict)
 			
 		else:
 			context = {
@@ -56,20 +58,20 @@ class BaseTodoObjectView(View):
 		form = self.form_class(data=form_data, instance=obj)
 		if request.is_ajax() and form.is_valid():
 			todo_instance = form.save(commit=False)
-			if not obj:
-				todo_dict = todo_instance.__dict__
-				todo_dict.pop('_state')
-				todo_dict['message'] = self.success_message
-				todo_dict.update(todo_instance.get_due_info())
-				return JsonResponse(todo_dict)
+			todo_dict = todo_instance.__dict__
+			todo_dict.pop('_state')
+			todo_dict['message'] = self.success_message
+			todo_dict.update(todo_instance.get_due_info())
+			todo_dict['action'] = 'update' if obj else 'create' 
+			return JsonResponse(todo_dict)
 
-			else:
-				pass
-		# form = self.form_class(data=request.POST, instance=obj)
-		# if form.is_valid():
-		# 	form.save()
-		# 	messages.success(request, self.success_message)
-		# 	return redirect("todo:todo_list_create")
+
+		# else:
+		# 	form = self.form_class(data=request.POST, instance=obj)
+		# 	if form.is_valid():
+		# 		form.save(commit=False)
+		# 		messages.success(request, self.success_message)
+		# 		return redirect("todo:todo_list_create")
 
 
 class TodoListCreateView(BaseTodoObjectView):
@@ -103,8 +105,12 @@ class TodoCheckView(UpdateView):
 		obj.completed = True
 		obj.date_completed = timezone.now()
 		obj.save()
-		messages.info(self.request, self.info_message)
-		return redirect("todo:todo_list_create")
+		todo_dict = {}
+		todo_dict.update(obj.get_due_info())
+		todo_dict['message'] = self.info_message
+		return JsonResponse(todo_dict)
+		# messages.info(self.request, self.info_message)
+		# return redirect("todo:todo_list_create")
 
 
 class TodoUncheckView(UpdateView):

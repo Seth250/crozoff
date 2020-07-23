@@ -1,9 +1,15 @@
 
 const todoContainer = document.getElementById('todo-list-container');
+const todoForm = document.getElementById('todo-form');
 
-function submitCheckboxForm(){
+function ajaxCheckboxAction(){
 	const todo_pk = this.getAttribute('data-pk');
-	this.form.action = `${todo_pk}/${this.checked ? 'check' : 'uncheck'}/`;
+	// this.form.action = `${todo_pk}/${this.checked ? 'check' : 'uncheck'}/`;
+	fetch(`${todo_pk}/${this.checked ? 'check' : 'uncheck'}/`, {
+		method: 'POST',
+		headers: getDefaultRequestHeaders(),
+	}).then((response) => response.json())
+	  .then((data) => console.log(data))
 	// checkbox.disabled = true;
 	// this.form.submit();
 }
@@ -80,6 +86,7 @@ function dragEndHandler(){
 
 function todoArrangementToggle(event){
 	const todoElems = document.querySelectorAll('.todo-item');
+	// you could probably check this classList and see what you can change
 	if (event.target.classList.contains('fas')){
 		event.target.classList.remove('fas', 'fa-arrows-alt');
 		event.target.classList.add('far', 'fa-save');
@@ -143,11 +150,14 @@ function getTodoItemInfo(event){
 		headers: {
 			'X-Requested-With': 'XMLHttpRequest',
 		}
-	})
-	  .then((response) => {
-		  console.log(response);
-		//   response.json()
-	  })
+	}).then((response) => response.json())
+	  .then((data) => {
+		document.getElementById('id_item').value = data.item;
+		// using slice to remove the seconds(:ss) from the date(the date value won't be valid unless it is removed)
+		document.getElementById('id_due_date').value = data.due_date.slice(0, -3);  
+		todoForm.action = this.href;
+		todoForm.scrollIntoView(true);
+	  })	
 	  .catch((error) => console.log(error));
 }
 
@@ -213,6 +223,15 @@ function createTodoElement(responseObj){
 	smoothScrollIntoView(todoContainer.firstChild);
 }
 
+function updateTodoElement(responseObj){
+	const todoElem = document.getElementById(`item-${responseObj.id}`);
+	todoElem.querySelector('.todo-name').firstChild.nodeValue = responseObj.item;
+	const todoStatus = todoElem.querySelector('.todo-status span');
+	todoStatus.className = responseObj.class_tag;
+	todoStatus.textContent = responseObj.status;
+	smoothScrollIntoView(todoElem);
+}
+
 function ajaxTodoFormSubmit(event){
 	event.preventDefault();
 	fetch(this.action, {
@@ -220,7 +239,7 @@ function ajaxTodoFormSubmit(event){
 		headers: getDefaultRequestHeaders(),
 		body: JSON.stringify(Object.fromEntries(new FormData(this)))
 	}).then((response) => response.json())
-	  .then((data) => createTodoElement(data))
+	  .then((data) => data.action === "create" ? createTodoElement(data) : updateTodoElement(data))
 	  .catch((err) => console.log(err));
 
 	this.reset();
@@ -232,7 +251,7 @@ function initialize(){
 
 	const checkboxes = document.querySelectorAll("input[type='checkbox']");
 	checkboxes.forEach((checkbox) => {
-		checkbox.addEventListener('click', submitCheckboxForm, false);
+		checkbox.addEventListener('click', ajaxCheckboxAction, false);
 	})
 	
 	const searchIcon = document.querySelector('.search-icon');
@@ -246,7 +265,6 @@ function initialize(){
 		link.addEventListener('click', getTodoItemInfo, false);
 	})
 
-	const todoForm = document.getElementById('todo-form');
 	todoForm.addEventListener('submit', ajaxTodoFormSubmit, false);
 }
 
