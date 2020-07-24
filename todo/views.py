@@ -7,17 +7,14 @@ from django.http import HttpResponse, JsonResponse
 from django.db import transaction
 import json
 from django.urls import reverse
-from django.views.generic import (
-	View,
-	UpdateView,
-	DeleteView,
-)
+from django.views.generic import View, DeleteView
+from django.views.generic.detail import SingleObjectMixin
 
 # Create your views here.
 
 class BaseTodoObjectView(View):
-	success_message = None
 	model = Todo
+	success_message = None
 	template_name = 'todo/index.html'
 	form_class = TodoForm
 
@@ -61,6 +58,7 @@ class BaseTodoObjectView(View):
 			todo_dict = todo_instance.__dict__
 			todo_dict.pop('_state')
 			todo_dict['message'] = self.success_message
+			todo_dict['total_pending'] = self.model.objects.filter(completed=False).count()
 			todo_dict.update(todo_instance.get_due_info())
 			todo_dict['action'] = 'update' if obj else 'create' 
 			return JsonResponse(todo_dict)
@@ -74,6 +72,26 @@ class BaseTodoObjectView(View):
 		# 		return redirect("todo:todo_list_create")
 
 
+class TodoStatusUpdateView(SingleObjectMixin, View):
+	model = Todo
+	info_message = None
+	completed_status = None
+	date_completed = None
+
+	def post(self, request, *args, **kwargs):
+		if request.is_ajax():
+			obj = self.get_object()
+			obj.completed = self.completed_status
+			obj.date_completed = self.date_completed
+			# obj.save()
+			todo_dict = {}
+			todo_dict.update(obj.get_due_info())
+			todo_dict['message'] = self.info_message
+			todo_dict['total_pending'] = self.model.objects.filter(completed=False).count()
+			todo_dict['action'] = 'check' if self.completed_status else 'uncheck'
+			return JsonResponse(todo_dict)
+
+
 class TodoListCreateView(BaseTodoObjectView):
 	success_message = 'Todo Item has been Added Successfully!'
 
@@ -82,48 +100,69 @@ class TodoUpdateView(BaseTodoObjectView):
 	success_message = 'Todo Item has been Updated!'
 
 
-class TodoDeleteView(DeleteView):
+class TodoCheckView(TodoStatusUpdateView):
+	info_message = 'Status has been Changed to Completed!'
+	completed_status = True
+	date_completed = timezone.now()
+
+
+class TodoUncheckView(TodoStatusUpdateView):
+	info_message = 'Status change has been reverted!'
+	completed_status = False
+	date_completed = None
+
+
+class TodoDeleteView(SingleObjectMixin, View):
 	model = Todo
 	success_message = 'Todo Item has been Deleted Successfully!'
 
-	def get_success_url(self):
-		return reverse("todo:todo_list_create")
-
-	def delete(self, request, *args, **kwargs):
-		# obj = self.get_object()
-		messages.success(self.request, self.success_message)
-		return super(TodoDeleteView, self).delete(request, *args, **kwargs)
-
-
-# You don't need all these Generic views
-class TodoCheckView(UpdateView):
-	model = Todo
-	info_message = 'Status has been Changed to Completed!'
-
 	def post(self, request, *args, **kwargs):
-		obj = self.get_object()
-		obj.completed = True
-		obj.date_completed = timezone.now()
-		obj.save()
-		todo_dict = {}
-		todo_dict.update(obj.get_due_info())
-		todo_dict['message'] = self.info_message
-		return JsonResponse(todo_dict)
-		# messages.info(self.request, self.info_message)
-		# return redirect("todo:todo_list_create")
+		if request.is_ajax():
+			# self.get_object().delete()
+			todo_dict = {}
+			todo_dict['message'] = self.success_message
+			todo_dict['total_pending'] = self.model.objects.filter(completed=False).count()
+			return JsonResponse(todo_dict)
 
 
-class TodoUncheckView(UpdateView):
-	model = Todo
-	info_message = 'Status change has been reverted!'
 
-	def post(self, request, *args, **kwargs):
-		obj = self.get_object()
-		obj.completed = False
-		obj.date_completed = None
-		obj.save()
-		messages.info(self.request, self.info_message)
-		return redirect("todo:todo_list_create")
+# class TodoDeleteView(DeleteView):
+# 	model = Todo
+# 	success_message = 'Todo Item has been Deleted Successfully!'
+
+# 	def get_success_url(self):
+# 		return reverse("todo:todo_list_create")
+
+# 	def delete(self, request, *args, **kwargs):
+# 		# obj = self.get_object()
+# 		messages.success(self.request, self.success_message)
+# 		return super(TodoDeleteView, self).delete(request, *args, **kwargs)
+
+
+# class TodoCheckView(UpdateView):
+# 	model = Todo
+# 	info_message = 'Status has been Changed to Completed!'
+
+# 	def post(self, request, *args, **kwargs):
+# 		obj = self.get_object()
+# 		obj.completed = True
+# 		obj.date_completed = timezone.now()
+# 		obj.save()
+# 		# messages.info(self.request, self.info_message)
+# 		# return redirect("todo:todo_list_create")
+
+
+# class TodoUncheckView(UpdateView):
+# 	model = Todo
+# 	info_message = 'Status change has been reverted!'
+
+# 	def post(self, request, *args, **kwargs):
+# 		obj = self.get_object()
+# 		obj.completed = False
+# 		obj.date_completed = None
+# 		obj.save()
+# 		messages.info(self.request, self.info_message)
+# 		return redirect("todo:todo_list_create")
 
 
 class TodoOrderSaveView(View):

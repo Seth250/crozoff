@@ -16,8 +16,7 @@
 }
 
 :focus{
-  outline: 2px solid black;
-  outline-offset: 1px;
+  outline-offset: 2px;
 }
 
 .page-wrapper{
@@ -193,7 +192,8 @@
 	// border: 1px solid green;
 	font-size: 1.05em;
 	padding: 0.3rem 0;
-	text-transform: capitalize;
+  text-transform: capitalize;
+  text-decoration-color: transparent;
 }
 
 .todo-status{
@@ -392,6 +392,7 @@ input[type="checkbox"]{
     text-align: center;
     color: white;
     background: #008B45;
+    transition: font-size 0.3s ease-in, content 0.3s ease-in, color 0.3s ease-in, background 0.3s ease-in;
     // background: green;
     // background: #0E8C3A;
   }
@@ -412,10 +413,12 @@ input[type="checkbox"]{
 }
 
 .strike{
-	text-decoration: line-through;
+  text-decoration: line-through;
+  text-decoration-color: rgb(100, 100, 100);
   // opacity: 0.8;
   // color: rgb(85, 85, 85);
   color: rgb(100, 100, 100);
+  transition: all 0.3s ease-in;
 }
 
 .hide{

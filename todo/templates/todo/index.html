@@ -39,7 +39,7 @@
 				<div class="container">
 					<div class="todo-header">
 						<h2> 
-							<span>You have {{ total_pending }} Pending Todos</span>
+							<span>You have <span id="total-pending">{{ total_pending }}</span> Pending Todos</span>
 							<i class="fas fa-arrows-alt move-icon" title="Enable Todo re-arrangement"></i>
 						</h2>
 					</div>
@@ -76,12 +76,15 @@
  -->							<a href="{% url 'todo:todo_edit' pk=todo.pk %}" title="Edit this todo">
 										<i class="far fa-edit"></i>
 									</a>
-									<form method="POST" action="{% url 'todo:todo_delete' pk=todo.pk %}">
+									<button type="button" class="delete-button" title="Delete this todo" data-url="{% url 'todo:todo_delete' pk=todo.pk %}">
+										<i class="far fa-trash-alt"></i>
+									</button>
+									<!-- <form method="POST" action="{% url 'todo:todo_delete' pk=todo.pk %}" id="delete-form">
 										{% csrf_token %}
 										<button type="Submit" class="delete-button" title="Delete this todo">
 											<i class="far fa-trash-alt"></i>
 										</button>
-									</form>
+									</form> -->
 								</div>
 							</div>
 						{% empty %}
@@ -91,7 +94,7 @@
 						{% endfor %}
 					</div>
 					<div class="form-container" id="form-container">
-						<form method="POST" action="#" id="todo-form">
+						<form method="POST" id="todo-form">
 							{% csrf_token %}
 							{{ form.as_p }}
 							<button type="submit" class="save-button" id="save-button">Save Todo</button>

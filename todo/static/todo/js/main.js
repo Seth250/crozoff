@@ -2,18 +2,6 @@
 const todoContainer = document.getElementById('todo-list-container');
 const todoForm = document.getElementById('todo-form');
 
-function ajaxCheckboxAction(){
-	const todo_pk = this.getAttribute('data-pk');
-	// this.form.action = `${todo_pk}/${this.checked ? 'check' : 'uncheck'}/`;
-	fetch(`${todo_pk}/${this.checked ? 'check' : 'uncheck'}/`, {
-		method: 'POST',
-		headers: getDefaultRequestHeaders(),
-	}).then((response) => response.json())
-	  .then((data) => console.log(data))
-	// checkbox.disabled = true;
-	// this.form.submit();
-}
-
 const getCsrfToken = () => document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
 function getDefaultRequestHeaders(){
@@ -143,30 +131,13 @@ function smoothScrollIntoView(elem, yOffset=-200){
 	});
 }
 
-// maybe change to todoeditinfo
-function getTodoItemInfo(event){
-	event.preventDefault();
-	fetch(this.href, {
-		headers: {
-			'X-Requested-With': 'XMLHttpRequest',
-		}
-	}).then((response) => response.json())
-	  .then((data) => {
-		document.getElementById('id_item').value = data.item;
-		// using slice to remove the seconds(:ss) from the date(the date value won't be valid unless it is removed)
-		document.getElementById('id_due_date').value = data.due_date.slice(0, -3);  
-		todoForm.action = this.href;
-		todoForm.scrollIntoView(true);
-	  })	
-	  .catch((error) => console.log(error));
-}
-
 function todoCreateFragment(todoObj){
 	const todoFrag = document.createDocumentFragment();
 	
 	const todoItem = document.createElement('div');
 	todoItem.classList.add('todo-item');
 	todoItem.setAttribute('data-order', `${todoObj.id}-${todoObj.order}`);
+	todoItem.id = `item-${todoObj.id}`;
 
 	const todoCol1 = document.createElement('div');
 	todoCol1.classList.add('item-col-1');
@@ -199,37 +170,117 @@ function todoCreateFragment(todoObj){
 	todoCol2.classList.add('item-col-2');
 	const editLink = document.createElement('a');
 	editLink.setAttribute('href', `${todoObj.id}/edit/`);
+	editLink.setAttribute('title', 'Edit this todo');
 	editLink.innerHTML = '<i class="far fa-edit"></i>';
 	todoCol2.appendChild(editLink);
-	const deleteForm = document.createElement('form');
-	deleteForm.setAttribute('method', 'POST');
-	deleteForm.setAttribute('action', `${todoObj.id}/delete/`);
 	const deleteButton = document.createElement('button');
 	deleteButton.setAttribute('type', 'submit');
 	deleteButton.classList.add('delete-button');
 	deleteButton.setAttribute('title', 'Delete this todo');
+	deleteButton.setAttribute('data-url', `${todoObj.id}/delete/`);
 	deleteButton.innerHTML = '<i class="far fa-trash-alt"></i>';
-	deleteForm.appendChild(deleteButton);
-	todoCol2.appendChild(deleteForm);
+	todoCol2.appendChild(deleteButton);
 	todoItem.appendChild(todoCol2);
 
 	todoFrag.appendChild(todoItem);
-
 	return todoFrag;
+}
+
+function emptyTodoListFragment(){
+	const todoFrag = document.createDocumentFragment();
+	const emptyList = document.createElement('div');
+	emptyList.classList.add('empty-todo-list');
+	emptyList.innerHTML = '<p>No Todos to Display</p>';
+	todoFrag.appendChild(emptyList);
+	return todoFrag;
+}
+
+// maybe change to todoeditinfo
+function getTodoItemInfo(event){
+	event.preventDefault();
+	fetch(this.href, {
+		headers: {
+			'X-Requested-With': 'XMLHttpRequest',
+		}
+	}).then((response) => response.json())
+	  .then((data) => {
+		document.getElementById('id_item').value = data.item;
+		// using slice to remove the seconds(:ss) from the date(the date value won't be valid unless it is removed)
+		document.getElementById('id_due_date').value = data.due_date.slice(0, -3);  
+		todoForm.action = this.href;
+		todoForm.scrollIntoView(true);
+	  })	
+	  .catch((error) => console.log(error));
+}
+
+function updatePendingTodoNumber(objValue){
+	document.getElementById('total-pending').textContent = objValue;
+}
+
+function updateTodoStatus(obj, elem){
+	const todoStatus = elem.querySelector('.todo-status span');
+	todoStatus.className = obj.class_tag;
+	todoStatus.textContent = obj.status;
+	updatePendingTodoNumber(obj.total_pending);
 }
 
 function createTodoElement(responseObj){
 	todoContainer.insertBefore(todoCreateFragment(responseObj), todoContainer.firstChild);
+	updatePendingTodoNumber(responseObj.total_pending);
 	smoothScrollIntoView(todoContainer.firstChild);
 }
 
 function updateTodoElement(responseObj){
 	const todoElem = document.getElementById(`item-${responseObj.id}`);
-	todoElem.querySelector('.todo-name').firstChild.nodeValue = responseObj.item;
-	const todoStatus = todoElem.querySelector('.todo-status span');
-	todoStatus.className = responseObj.class_tag;
-	todoStatus.textContent = responseObj.status;
+	// todoElem.querySelector('.todo-name').firstChild.nodeValue = responseObj.item;
+	todoElem.querySelector('.todo-name').textContent = responseObj.item;
+	updateTodoStatus(responseObj, todoElem)
 	smoothScrollIntoView(todoElem);
+}
+
+function updateCheckedTodoItem(responseObj, todoElem){
+	todoElem.querySelector('.todo-name').classList.add('strike');
+	todoElem.setAttribute('title', 'Uncheck this todo');
+	updateTodoStatus(responseObj, todoElem);
+}
+
+function updateUncheckedTodoItem(responseObj, todoElem){
+	todoElem.querySelector('.todo-name').classList.remove('strike');
+	todoElem.setAttribute('title', 'Check this todo');
+	updateTodoStatus(responseObj, todoElem);
+}
+
+function deleteTodoElement(){
+	fetch(this.getAttribute('data-url'), {
+		method: 'POST',
+		headers: getDefaultRequestHeaders()
+	}).then((response) => response.json())
+	  .then((data) => {
+			const todoElem = this.parentElement.parentElement;
+		  	todoElem.style.transform = 'translateY(30%) rotateX(15deg)';
+		  	todoElem.style.opacity = '0';
+		  	todoElem.style.transition = 'all 0.3s ease-in';
+		  	setTimeout(() => {
+				todoContainer.removeChild(todoElem);
+				updatePendingTodoNumber(data.total_pending);
+				if (!todoContainer.children.length){
+					todoContainer.appendChild(emptyTodoListFragment());
+				}
+			}, 380);
+		})
+	  .catch((err) => console.log(err));
+}
+
+function ajaxCheckboxAction(){
+	const todoPk = this.getAttribute('data-pk');
+	const todoElem = document.getElementById(`item-${todoPk}`);
+	// this.form.action = `${todo_pk}/${this.checked ? 'check' : 'uncheck'}/`;
+	fetch(`${todoPk}/${this.checked ? 'check' : 'uncheck'}/`, {
+		method: this.form.method,
+		headers: getDefaultRequestHeaders()
+	}).then((response) => response.json())
+	  .then((data) => data.action === "check" ? updateCheckedTodoItem(data, todoElem) : updateUncheckedTodoItem(data, todoElem))
+	  .catch((err) => console.log(err));
 }
 
 function ajaxTodoFormSubmit(event){
@@ -243,6 +294,7 @@ function ajaxTodoFormSubmit(event){
 	  .catch((err) => console.log(err));
 
 	this.reset();
+	this.removeAttribute('action');
 }
 
 function initialize(){
@@ -250,9 +302,7 @@ function initialize(){
 	searchBox.addEventListener('keyup', searchTodos, false);
 
 	const checkboxes = document.querySelectorAll("input[type='checkbox']");
-	checkboxes.forEach((checkbox) => {
-		checkbox.addEventListener('click', ajaxCheckboxAction, false);
-	})
+	checkboxes.forEach((checkbox) => checkbox.addEventListener('click', ajaxCheckboxAction, false));
 	
 	const searchIcon = document.querySelector('.search-icon');
 	searchIcon.addEventListener('click', mobileSearchBarToggle, false);
@@ -261,11 +311,12 @@ function initialize(){
 	moveIcon.addEventListener('click', todoArrangementToggle, false);
 
 	const editLinks = document.querySelectorAll('.item-col-2 a');
-	editLinks.forEach((link) => {
-		link.addEventListener('click', getTodoItemInfo, false);
-	})
+	editLinks.forEach((link) => link.addEventListener('click', getTodoItemInfo, false));
 
 	todoForm.addEventListener('submit', ajaxTodoFormSubmit, false);
+
+	const deleteButtons = document.querySelectorAll('.delete-button');
+	deleteButtons.forEach((button) => button.addEventListener('click', deleteTodoElement, false));
 }
 
 window.addEventListener('load', initialize, false);
