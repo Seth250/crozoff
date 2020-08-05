@@ -26,19 +26,31 @@
 					<input type="text" class="search-input input-collapse-mobile" placeholder="Search todos..." />
 						<!-- <button type="submit" class="search-button"><i class="fas fa-search"></i></button> -->
 				</div>
+				<div class="detail-bar">
+					<span class="detail-bar__user">{{ request.user | upper | slice:"1" }}</span>
+					<i class="fas fa-sort-down detail-bar__icon"></i>
+					<nav class="detail-bar__nav hide">
+						<ul>
+							<li class="username"><i class="fas fa-user"></i><strong>{{ request.user }}</strong></li>
+							<li><a href="{% url 'accounts:logout' %}" class="logout-link">Logout</a></li>
+						</ul>
+					</nav>
+				</div>
 			</header>
+			<!-- User:&nbsp; -->
 
 			<main role="main" class="main-content">
-				{% if messages %}
+				<!-- {% if messages %}
 					{% for message in messages %}
 						<div class="message message-{{ message.tags }}">
 							{{ message }}
 						</div>
 					{% endfor %}
-				{% endif %}
+				{% endif %} -->
+				<div class="message hide"></div>
 				<div class="container">
 					<div class="todo-header">
-						<h2> 
+						<h2>
 							<span>You have <span id="total-pending">{{ total_pending }}</span> Pending Todos</span>
 							<i class="fas fa-arrows-alt move-icon" title="Enable Todo re-arrangement"></i>
 						</h2>

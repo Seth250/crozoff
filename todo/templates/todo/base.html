@@ -1,0 +1,42 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<title>{% block title %}{% endblock title %}</title>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" 			
+					rel="stylesheet">
+		<link href="{% static 'todo/css/styles.css' %}"  rel="stylesheet"/>
+		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" />
+	</head>
+	<body>
+		<div class="page-wrapper">
+			<header class="page-header">
+				<h1>
+					<a href="{% url 'todo:todo_list_create' %}">Croz</a>
+        </h1>
+        {% if request.user.is_authenticated %}
+        <div class="search-form">
+					<i class="fas fa-search search-icon"></i>
+					<input type="text" class="search-input input-collapse-mobile" placeholder="Search todos..." />
+				</div>
+        {% endif %}
+			</header>
+
+			<main role="main" class="main-content">
+        {% block content %}
+        {% endblock content %}
+			</main>
+
+			<footer class="page-footer">
+				<p>&copy; {% now "Y" %} Croz</p>
+			</footer>
+    </div>
+    
+    {% block script %}
+    {% endblock script %}
+	</body>
+</html>

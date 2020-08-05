@@ -1,10 +1,13 @@
 from django.db import models
 from django.utils import timezone
 from .convert import convert_date_time
+from django.conf import settings
 
 # Create your models here.
 
 class Todo(models.Model):
+	# user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='todos', 
+	# 						 related_query_name='todo')
 	item = models.CharField(max_length=100, verbose_name="todo item")
 	completed = models.BooleanField(default=False)
 	due_date = models.DateTimeField(verbose_name="due date")

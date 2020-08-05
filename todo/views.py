@@ -3,37 +3,32 @@ from .models import Todo
 from .forms import TodoForm
 from django.utils import timezone
 from django.contrib import messages
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.db import transaction
 import json
 from django.urls import reverse
 from django.views.generic import View, DeleteView
 from django.views.generic.detail import SingleObjectMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
-class BaseTodoObjectView(View):
-	model = Todo
+class BaseTodoObjectView(LoginRequiredMixin, View):
 	success_message = None
-	template_name = 'todo/index.html'
-	form_class = TodoForm
 
 	def get_object(self):
-		_pk = self.kwargs.get('pk')
+		pk = self.kwargs.get('pk')
 		obj = None
-		if _pk is not None:
-			obj = get_object_or_404(Todo, pk=_pk)
+		if pk is not None:
+			obj = get_object_or_404(Todo, pk=pk)
 
 		return obj
 
 	def get(self, request, *args, **kwargs):
 		obj = self.get_object()
-		form = self.form_class(instance=obj)
-		total_pending = self.model.objects.filter(completed=False).count()
-		todo_list = self.model.objects.all().order_by('order');
-		# pending_todos = Todo.objects.filter(completed=False).order_by('-date_created')
-		# completed_todos = Todo.objects.filter(completed=True).order_by('-date_completed')
-		# todo_list = [*pending_todos, *completed_todos]
+		form = TodoForm(instance=obj)
+		total_pending = Todo.objects.filter(completed=False).count()
+		todo_list = Todo.objects.all().order_by('order');
 
 		# if it is an ajax request and we want to get the data for an object
 		if request.is_ajax() and obj:
@@ -46,23 +41,22 @@ class BaseTodoObjectView(View):
 				'total_pending': total_pending,
 				'form': form
 			}
-
-			return render(request, self.template_name, context)
+			return render(request, 'todo/index.html', context)
 
 	def post(self, request, *args, **kwargs):
 		obj = self.get_object()
 		form_data = json.loads(request.body)
-		form = self.form_class(data=form_data, instance=obj)
+		form = TodoForm(data=form_data, instance=obj)
 		if request.is_ajax() and form.is_valid():
 			todo_instance = form.save(commit=False)
 			todo_dict = todo_instance.__dict__
 			todo_dict.pop('_state')
 			todo_dict['message'] = self.success_message
-			todo_dict['total_pending'] = self.model.objects.filter(completed=False).count()
+			todo_dict['message_tag'] = 'success'
+			todo_dict['total_pending'] = Todo.objects.filter(completed=False).count()
 			todo_dict.update(todo_instance.get_due_info())
 			todo_dict['action'] = 'update' if obj else 'create' 
 			return JsonResponse(todo_dict)
-
 
 		# else:
 		# 	form = self.form_class(data=request.POST, instance=obj)
@@ -72,23 +66,24 @@ class BaseTodoObjectView(View):
 		# 		return redirect("todo:todo_list_create")
 
 
-class TodoStatusUpdateView(SingleObjectMixin, View):
+class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
 	model = Todo
 	info_message = None
-	completed_status = None
+	completed = False
 	date_completed = None
 
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
 			obj = self.get_object()
-			obj.completed = self.completed_status
+			obj.completed = self.completed
 			obj.date_completed = self.date_completed
 			# obj.save()
 			todo_dict = {}
 			todo_dict.update(obj.get_due_info())
 			todo_dict['message'] = self.info_message
+			todo_dict['message_tag'] = 'info'			
 			todo_dict['total_pending'] = self.model.objects.filter(completed=False).count()
-			todo_dict['action'] = 'check' if self.completed_status else 'uncheck'
+			todo_dict['action'] = 'check' if self.completed else 'uncheck'
 			return JsonResponse(todo_dict)
 
 
@@ -102,28 +97,44 @@ class TodoUpdateView(BaseTodoObjectView):
 
 class TodoCheckView(TodoStatusUpdateView):
 	info_message = 'Status has been Changed to Completed!'
-	completed_status = True
+	completed = True
 	date_completed = timezone.now()
 
 
 class TodoUncheckView(TodoStatusUpdateView):
 	info_message = 'Status change has been reverted!'
-	completed_status = False
-	date_completed = None
 
 
-class TodoDeleteView(SingleObjectMixin, View):
+class TodoDeleteView(LoginRequiredMixin, SingleObjectMixin, View):
 	model = Todo
-	success_message = 'Todo Item has been Deleted Successfully!'
 
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
 			# self.get_object().delete()
-			todo_dict = {}
-			todo_dict['message'] = self.success_message
-			todo_dict['total_pending'] = self.model.objects.filter(completed=False).count()
+			todo_dict = {
+				'message': 'Todo Item has been Deleted Successfully!',
+				'message_tag': 'success',
+				'total_pending': self.model.objects.filter(completed=False).count()
+			}
 			return JsonResponse(todo_dict)
 
+
+class TodoOrderSaveView(LoginRequiredMixin, View):
+
+	def post(self, request, *args, **kwargs):
+		if request.is_ajax():
+			todo_data = json.loads(request.body)
+			with transaction.atomic():
+				for data in todo_data:
+					obj = get_object_or_404(Todo, pk=data['pk'])
+					obj.order = data['order']
+					obj.save()
+
+			todo_dict = {
+				'message': 'Order has been Saved Successfully!', 
+				'message_tag': 'success'
+			}
+			return JsonResponse(todo_dict)
 
 
 # class TodoDeleteView(DeleteView):
@@ -163,18 +174,3 @@ class TodoDeleteView(SingleObjectMixin, View):
 # 		obj.save()
 # 		messages.info(self.request, self.info_message)
 # 		return redirect("todo:todo_list_create")
-
-
-class TodoOrderSaveView(View):
-	model = Todo
-
-	def post(self, request, *args, **kwargs):
-		if request.is_ajax():
-			todo_data = json.loads(request.body)
-			with transaction.atomic():
-				for data in todo_data:
-					obj = get_object_or_404(self.model, pk=data['pk'])
-					obj.order = data['order']
-					obj.save()
-
-			return HttpResponse('saved')

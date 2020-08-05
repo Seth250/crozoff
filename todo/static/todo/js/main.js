@@ -1,5 +1,6 @@
 
 const todoContainer = document.getElementById('todo-list-container');
+const messageBox = document.querySelector('.message');
 const todoForm = document.getElementById('todo-form');
 
 const getCsrfToken = () => document.querySelector('input[name="csrfmiddlewaretoken"]').value;
@@ -55,12 +56,33 @@ function mobileSearchBarToggle(event){
 	if (window.matchMedia("(max-width: 600px)").matches){
 		event.target.classList.toggle('fa-search');
 		event.target.classList.toggle('fa-arrow-left');
+		document.querySelector('.detail-bar').classList.toggle('heading-collapse-mobile');
 		document.querySelector('.page-header h1').classList.toggle('heading-collapse-mobile');
 		document.querySelector('.search-form').classList.toggle('form-open-mobile');
 		const searchInput = document.querySelector('.search-input');
 		searchInput.classList.toggle('input-collapse-mobile');
 		searchInput.focus();
 	}
+}
+
+function messageFadeTimeout(){
+	return new Promise((resolve) => {
+		setTimeout(() => {
+			messageBox.classList.add('fade');
+			resolve();
+		}, 3000);
+	})
+}
+
+async function displayMessage(message, tag){
+	messageBox.classList.remove('hide');
+	messageBox.classList.add(`message-${tag}`);
+	messageBox.textContent = message;
+	await messageFadeTimeout();
+	setTimeout(() => {
+		messageBox.classList.add('hide')
+		messageBox.classList.remove(`message-${tag}`, 'fade');
+	}, 500);
 }
 
 function dragStartHandler(){
@@ -104,7 +126,6 @@ function todoArrangementToggle(event){
 			elem.removeEventListener('dragstart', dragStartHandler, false);
 			elem.removeEventListener('dragend', dragEndHandler, false);
 		})
-		console.log(todoOrderArr);
 		todoContainer.removeEventListener('dragover', updateTodoPosition, false);
 		// Apparently, empty arrays evaluate to true in javascript(because they are essentially objects and objects are 
 		// truthy), so I'm using .length as a workaround
@@ -114,7 +135,9 @@ function todoArrangementToggle(event){
 				method: 'POST',
 				headers: getDefaultRequestHeaders(),
 				body: JSON.stringify(todoOrderArr)
-			}).catch((err) => console.log(err));
+			}).then((response) => response.json())
+			  .then(({message, message_tag}) => displayMessage(message, message_tag))
+			  .catch((err) => console.log(err));
 		}
 	}
 }
@@ -179,7 +202,7 @@ function todoCreateFragment(todoObj){
 	deleteButton.setAttribute('title', 'Delete this todo');
 	deleteButton.setAttribute('data-url', `${todoObj.id}/delete/`);
 	deleteButton.innerHTML = '<i class="far fa-trash-alt"></i>';
-	todoCol2.appendChild(deleteButton);
+	todoCol2.appendChild(deleteButton);	
 	todoItem.appendChild(todoCol2);
 
 	todoFrag.appendChild(todoItem);
@@ -195,18 +218,17 @@ function emptyTodoListFragment(){
 	return todoFrag;
 }
 
-// maybe change to todoeditinfo
-function getTodoItemInfo(event){
+function getTodoItemEditInfo(event){
 	event.preventDefault();
 	fetch(this.href, {
 		headers: {
 			'X-Requested-With': 'XMLHttpRequest',
 		}
 	}).then((response) => response.json())
-	  .then((data) => {
-		document.getElementById('id_item').value = data.item;
+	  .then(({ item, due_date }) => {
+		document.getElementById('id_item').value = item;
 		// using slice to remove the seconds(:ss) from the date(the date value won't be valid unless it is removed)
-		document.getElementById('id_due_date').value = data.due_date.slice(0, -3);  
+		document.getElementById('id_due_date').value = due_date.slice(0, -3);  
 		todoForm.action = this.href;
 		todoForm.scrollIntoView(true);
 	  })	
@@ -225,9 +247,14 @@ function updateTodoStatus(obj, elem){
 }
 
 function createTodoElement(responseObj){
-	todoContainer.insertBefore(todoCreateFragment(responseObj), todoContainer.firstChild);
+	if (todoContainer.querySelector('.empty-todo-list')) {
+		todoContainer.replaceChild(todoCreateFragment(responseObj), todoContainer.firstElementChild);
+	} else {
+		todoContainer.insertBefore(todoCreateFragment(responseObj), todoContainer.firstChild);
+	}
 	updatePendingTodoNumber(responseObj.total_pending);
-	smoothScrollIntoView(todoContainer.firstChild);
+	displayMessage(responseObj.message, responseObj.message_tag);
+	smoothScrollIntoView(todoContainer.firstElementChild);
 }
 
 function updateTodoElement(responseObj){
@@ -235,19 +262,20 @@ function updateTodoElement(responseObj){
 	// todoElem.querySelector('.todo-name').firstChild.nodeValue = responseObj.item;
 	todoElem.querySelector('.todo-name').textContent = responseObj.item;
 	updateTodoStatus(responseObj, todoElem)
+	displayMessage(responseObj.message, responseObj.message_tag);
 	smoothScrollIntoView(todoElem);
 }
 
-function updateCheckedTodoItem(responseObj, todoElem){
-	todoElem.querySelector('.todo-name').classList.add('strike');
-	todoElem.setAttribute('title', 'Uncheck this todo');
+function updateTodoItemCheckboxDetails(responseObj, todoElem){
+	if (responseObj.action === "check"){
+		todoElem.querySelector('.todo-name').classList.add('strike');
+		todoElem.setAttribute('title', 'Uncheck this todo');		
+	} else {
+		todoElem.querySelector('.todo-name').classList.remove('strike');
+		todoElem.setAttribute('title', 'Check this todo');
+	}
 	updateTodoStatus(responseObj, todoElem);
-}
-
-function updateUncheckedTodoItem(responseObj, todoElem){
-	todoElem.querySelector('.todo-name').classList.remove('strike');
-	todoElem.setAttribute('title', 'Check this todo');
-	updateTodoStatus(responseObj, todoElem);
+	displayMessage(responseObj.message, responseObj.message_tag);
 }
 
 function deleteTodoElement(){
@@ -266,7 +294,8 @@ function deleteTodoElement(){
 				if (!todoContainer.children.length){
 					todoContainer.appendChild(emptyTodoListFragment());
 				}
-			}, 380);
+			}, 350);
+			displayMessage(data.message, data.message_tag);
 		})
 	  .catch((err) => console.log(err));
 }
@@ -279,7 +308,7 @@ function ajaxCheckboxAction(){
 		method: this.form.method,
 		headers: getDefaultRequestHeaders()
 	}).then((response) => response.json())
-	  .then((data) => data.action === "check" ? updateCheckedTodoItem(data, todoElem) : updateUncheckedTodoItem(data, todoElem))
+	  .then((data) => updateTodoItemCheckboxDetails(data, todoElem))
 	  .catch((err) => console.log(err));
 }
 
@@ -307,11 +336,15 @@ function initialize(){
 	const searchIcon = document.querySelector('.search-icon');
 	searchIcon.addEventListener('click', mobileSearchBarToggle, false);
 
+	const detailBar = document.querySelector('.detail-bar');
+	const detailBarNav = document.querySelector('.detail-bar__nav');
+	detailBar.addEventListener('click', () => detailBarNav.classList.toggle('hide'), true);
+
 	const moveIcon = document.querySelector('.move-icon');
 	moveIcon.addEventListener('click', todoArrangementToggle, false);
 
 	const editLinks = document.querySelectorAll('.item-col-2 a');
-	editLinks.forEach((link) => link.addEventListener('click', getTodoItemInfo, false));
+	editLinks.forEach((link) => link.addEventListener('click', getTodoItemEditInfo, false));
 
 	todoForm.addEventListener('submit', ajaxTodoFormSubmit, false);
 
