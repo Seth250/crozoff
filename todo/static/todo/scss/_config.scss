@@ -5,6 +5,7 @@ $primary-color: #fafafa;
 $alternate-color: #1261A0;
 $primary-border-radius: 4px;
 $secondary-border-radius: 0.3rem;
+$container-box-shadow: 0.05rem 0.075rem 0.2rem 0 rgba(0, 0, 0, 0.6);
 
 @mixin default-flex-styles{
   display: flex;

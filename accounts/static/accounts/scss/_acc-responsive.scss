@@ -1,0 +1,105 @@
+@media only screen and (max-width: 1024px){
+  .page-header-acc{
+    padding-left: 6em;
+  }
+  .container-acc{
+    width: 45vw;
+  }
+}
+
+@media only screen and (max-width: 768px){
+  .page-header-acc{
+    padding-left: 5em;
+  }
+  .container-acc{
+    width: 55vw;
+
+    &__header{
+      font-size: 90%;
+      letter-spacing: 0.02em; 
+    }
+  }
+  .login-error{
+    font-size: 105%;
+    letter-spacing: 0.01em;
+  }
+  .form-container-acc{
+    padding: 1em 0.75em;
+  }
+  .form-row{
+    label{
+      letter-spacing: 0.02em;
+    }
+  }
+  .text-input-acc{
+    font-size: 98%
+  }
+}
+
+@media only screen and (max-width: 600px){
+  .page-header-acc{
+    padding-left: 4em;
+  }
+  .container-acc{
+    width: 70vw;
+  }
+  .login-error{
+    font-size: 103%;
+  }
+  .submit-button{
+    font-size: 96%;
+    letter-spacing: 0.01em;
+  }
+}
+
+@media only screen and (max-width: 480px){
+  .page-header-acc{
+    padding-left: 2.5em;
+  }
+  .container-acc{
+    width: 90vw;
+  } 
+  .login-error{
+    font-size: 100%;
+  }
+  .form-row{
+    padding: 0.5em 0.25em;
+
+    label{
+      font-size: 97%;
+    }
+
+    p{
+      font-size: 97%;
+      letter-spacing: 0.02em;
+    }
+
+    ul.errorlist{
+      font-size: 98%;
+    }
+  }
+  .text-input-acc{
+    font-size: 96%
+  }
+  .standard-input{
+    width: 88.5%;
+  }
+  .password-input{
+    width: 81.5%;
+  }
+  .input-container > i{
+    width: 10.5%;
+  }
+}
+
+@media only screen and (max-width: 280px){
+  .page-header-acc{
+    padding-left: 2em;
+  }
+}
+
+@media only screen and (min-width: 1920px){
+	.container-acc{
+		width: 30vw;
+	}
+}

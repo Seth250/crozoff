@@ -338,7 +338,7 @@ function initialize(){
 
 	const detailBar = document.querySelector('.detail-bar');
 	const detailBarNav = document.querySelector('.detail-bar__nav');
-	detailBar.addEventListener('click', () => detailBarNav.classList.toggle('hide'), true);
+	detailBar.addEventListener('click', () => detailBarNav.classList.toggle('hide'), false);
 
 	const moveIcon = document.querySelector('.move-icon');
 	moveIcon.addEventListener('click', todoArrangementToggle, false);

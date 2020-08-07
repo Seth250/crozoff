@@ -1,7 +1,70 @@
-<div>
-  <form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
-  </form>
+{% extends "todo/base.html" %}
+
+{% load static %}
+
+{% block title %} SignUp Page {% endblock title %}
+
+{% block content %}
+<div class="container-acc">
+  <div class="container-acc__header">
+    <h2>Sign Up</h2>
+  </div>
+  <div class="form-container-acc">
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-row">
+        {{ form.username.label_tag }}
+        <div class="input-container">
+          <i class="far fa-user"></i>
+          {{ form.username }}
+        </div>
+        {{ form.username.errors }}
+      </div>
+      <div class="form-row">
+        {{ form.email.label_tag }}
+        <div class="input-container">
+          <i class="far fa-envelope"></i>
+          {{ form.email }}
+        </div>
+        {{ form.email.errors }}
+      </div>
+      <div class="form-row">
+        {{ form.password1.label_tag }}
+        <div class="input-container">
+          <i class="fas fa-lock"></i>
+          {{ form.password1 }}
+          <a class="password-toggler">
+            <i class="far fa-eye-slash"></i>
+            <i class="far fa-eye"></i>
+          </a>
+        </div>
+        {{ form.password1.errors }}
+      </div>
+      <div class="form-row">
+        {{ form.password2.label_tag }}
+        <div class="input-container">
+          <i class="fas fa-lock"></i>
+          {{ form.password2 }}
+          <a class="password-toggler">
+            <i class="far fa-eye-slash"></i>
+            <i class="far fa-eye"></i>
+          </a>
+        </div>
+        {{ form.password2.errors }}
+      </div>
+      <div class="form-row">
+        <button type="submit" class="submit-button">Sign Up</button>
+      </div>
+      <div class="form-row">
+        <p class="form-message">
+          Already have an account? <a href="{% url 'accounts:login' %}">Login here</a>
+        </p>
+      </div>
+    </form>
+  </div>
 </div>
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'accounts/js/main.js' %}"></script>
+{% endblock script %}
