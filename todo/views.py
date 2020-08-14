@@ -7,9 +7,10 @@ from django.http import JsonResponse
 from django.db import transaction
 import json
 from django.urls import reverse
-from django.views.generic import View, DeleteView
+from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -21,14 +22,16 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 		obj = None
 		if pk is not None:
 			obj = get_object_or_404(Todo, pk=pk)
+			if not self.request.user.is_superuser or self.request.user != obj.user:
+				raise PermissionDenied('You cannot access this page')
 
 		return obj
 
 	def get(self, request, *args, **kwargs):
 		obj = self.get_object()
 		form = TodoForm(instance=obj)
-		total_pending = Todo.objects.filter(completed=False).count()
-		todo_list = Todo.objects.all().order_by('order');
+		total_pending = request.user.todos.filter(completed=False).count()
+		todo_list = request.user.todos.all().order_by('order');
 
 		# if it is an ajax request and we want to get the data for an object
 		if request.is_ajax() and obj:
@@ -53,7 +56,7 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 			todo_dict.pop('_state')
 			todo_dict['message'] = self.success_message
 			todo_dict['message_tag'] = 'success'
-			todo_dict['total_pending'] = Todo.objects.filter(completed=False).count()
+			todo_dict['total_pending'] = request.user.todos.filter(completed=False).count()
 			todo_dict.update(todo_instance.get_due_info())
 			todo_dict['action'] = 'update' if obj else 'create' 
 			return JsonResponse(todo_dict)
@@ -82,7 +85,7 @@ class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
 			todo_dict.update(obj.get_due_info())
 			todo_dict['message'] = self.info_message
 			todo_dict['message_tag'] = 'info'			
-			todo_dict['total_pending'] = self.model.objects.filter(completed=False).count()
+			todo_dict['total_pending'] = request.user.todos.filter(completed=False).count()
 			todo_dict['action'] = 'check' if self.completed else 'uncheck'
 			return JsonResponse(todo_dict)
 
@@ -114,7 +117,7 @@ class TodoDeleteView(LoginRequiredMixin, SingleObjectMixin, View):
 			todo_dict = {
 				'message': 'Todo Item has been Deleted Successfully!',
 				'message_tag': 'success',
-				'total_pending': self.model.objects.filter(completed=False).count()
+				'total_pending': request.user.todos.filter(completed=False).count()
 			}
 			return JsonResponse(todo_dict)
 
@@ -136,41 +139,3 @@ class TodoOrderSaveView(LoginRequiredMixin, View):
 			}
 			return JsonResponse(todo_dict)
 
-
-# class TodoDeleteView(DeleteView):
-# 	model = Todo
-# 	success_message = 'Todo Item has been Deleted Successfully!'
-
-# 	def get_success_url(self):
-# 		return reverse("todo:todo_list_create")
-
-# 	def delete(self, request, *args, **kwargs):
-# 		# obj = self.get_object()
-# 		messages.success(self.request, self.success_message)
-# 		return super(TodoDeleteView, self).delete(request, *args, **kwargs)
-
-
-# class TodoCheckView(UpdateView):
-# 	model = Todo
-# 	info_message = 'Status has been Changed to Completed!'
-
-# 	def post(self, request, *args, **kwargs):
-# 		obj = self.get_object()
-# 		obj.completed = True
-# 		obj.date_completed = timezone.now()
-# 		obj.save()
-# 		# messages.info(self.request, self.info_message)
-# 		# return redirect("todo:todo_list_create")
-
-
-# class TodoUncheckView(UpdateView):
-# 	model = Todo
-# 	info_message = 'Status change has been reverted!'
-
-# 	def post(self, request, *args, **kwargs):
-# 		obj = self.get_object()
-# 		obj.completed = False
-# 		obj.date_completed = None
-# 		obj.save()
-# 		messages.info(self.request, self.info_message)
-# 		return redirect("todo:todo_list_create")

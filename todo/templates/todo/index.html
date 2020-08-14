@@ -1,127 +1,71 @@
+{% extends "todo/base.html" %}
+
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-		<title>Todo List</title>
-		<!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" /> -->
-		<link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" 			
-					rel="stylesheet">
-		<link href="{% static 'todo/css/styles.css' %}"  rel="stylesheet"/>
-<!-- 		<link href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700"
-					rel="stylesheet" /> -->
-		<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" rel="stylesheet" />
-	</head>
-	<body>
-		<div class="page-wrapper">
-			<header class="page-header">
-				<h1>
-					<!-- <a href="{% url 'todo:todo_list_create' %}">Todo App</a> -->
-					<a href="{% url 'todo:todo_list_create' %}">Crozz App</a>
-				</h1>
-				<div class="search-form">
-					<i class="fas fa-search search-icon"></i>
-					<input type="text" class="search-input input-collapse-mobile" placeholder="Search todos..." />
-						<!-- <button type="submit" class="search-button"><i class="fas fa-search"></i></button> -->
-				</div>
-				<div class="detail-bar">
-					<span class="detail-bar__user">{{ request.user | upper | slice:"1" }}</span>
-					<i class="fas fa-sort-down detail-bar__icon"></i>
-					<nav class="detail-bar__nav hide">
-						<ul>
-							<li class="username"><i class="fas fa-user"></i><strong>{{ request.user }}</strong></li>
-							<li><a href="{% url 'accounts:logout' %}" class="logout-link">Logout</a></li>
-						</ul>
-					</nav>
-				</div>
-			</header>
-			<!-- User:&nbsp; -->
+{% block title %} Todo List {% endblock title %}
 
-			<main role="main" class="main-content">
-				<!-- {% if messages %}
-					{% for message in messages %}
-						<div class="message message-{{ message.tags }}">
-							{{ message }}
-						</div>
-					{% endfor %}
-				{% endif %} -->
-				<div class="message hide"></div>
-				<div class="container">
-					<div class="todo-header">
-						<h2>
-							<span>You have <span id="total-pending">{{ total_pending }}</span> Pending Todos</span>
-							<i class="fas fa-arrows-alt move-icon" title="Enable Todo re-arrangement"></i>
-						</h2>
-					</div>
-					<div class="todo-list-container" id="todo-list-container">
-						{% for todo in todo_list %}
-							<div class="todo-item" data-order="{{ todo.pk }}-{{ todo.order }}" id="item-{{ todo.pk }}">
-								<div class="item-col-1">
-									<div class="todo-name {% if todo.completed %}strike{% endif %}">
-										{{ todo.item }}
-									</div>
-									<div class="todo-status">
-										<form method="POST">
-											{% csrf_token %}
-											{% if todo.completed %}
-												<input type="checkbox" data-pk="{{ todo.pk }}" title="Uncheck this todo" checked />
-											{% else %}
-												<input type="checkbox" data-pk="{{ todo.pk }}" title="Check this todo" />
-											{% endif %}
-										</form>
-										<span class="{{ todo.get_due_info.class_tag }}">
-											{{ todo.get_due_info.status }}
-										</span>
-									</div>
-								</div>
-								<div class="item-col-2">
-<!-- {#									<form method="POST">
-										{% csrf_token %}
-										{% if todo.completed %}
-											<input type="checkbox" id="{{ todo.pk }}" checked />
-										{% else %}
-											<input type="checkbox" id="{{ todo.pk }}" />
-										{% endif %}
-									</form>#}
- -->							<a href="{% url 'todo:todo_edit' pk=todo.pk %}" title="Edit this todo">
-										<i class="far fa-edit"></i>
-									</a>
-									<button type="button" class="delete-button" title="Delete this todo" data-url="{% url 'todo:todo_delete' pk=todo.pk %}">
-										<i class="far fa-trash-alt"></i>
-									</button>
-									<!-- <form method="POST" action="{% url 'todo:todo_delete' pk=todo.pk %}" id="delete-form">
-										{% csrf_token %}
-										<button type="Submit" class="delete-button" title="Delete this todo">
-											<i class="far fa-trash-alt"></i>
-										</button>
-									</form> -->
-								</div>
-							</div>
-						{% empty %}
-							<div class="empty-todo-list">
-								<p>No Todos to Display</p>
-							</div>
-						{% endfor %}
-					</div>
-					<div class="form-container" id="form-container">
-						<form method="POST" id="todo-form">
-							{% csrf_token %}
-							{{ form.as_p }}
-							<button type="submit" class="save-button" id="save-button">Save Todo</button>
-							<!-- remove save button id if you don't need it -->
-						</form>
-					</div>
-				</div>
-			</main>
-
-			<footer class="page-footer">
-				<p>&copy; {% now "Y" %} Todo App</p>
-			</footer>
+{% block content %}
+<!-- {% if messages %}
+	{% for message in messages %}
+		<div class="message message-{{ message.tags }}">
+			{{ message }}
 		</div>
+	{% endfor %}
+{% endif %} -->
+<div class="message pop-up hide"></div>
+<div class="container">
+	<div class="todo-header">
+		<h2>
+			<span>You have <span id="total-pending">{{ total_pending }}</span> Pending Todos</span>
+			<i class="fas fa-arrows-alt move-icon" title="Enable Todo re-arrangement"></i>
+		</h2>
+	</div>
+	<div class="todo-list-container" id="todo-list-container">
+		{% for todo in todo_list %}
+			<div class="todo-item" data-order="{{ todo.pk }}-{{ todo.order }}" id="item-{{ todo.pk }}">
+				<div class="item-col-1">
+					<div class="todo-name {% if todo.completed %}strike{% endif %}">
+						{{ todo.item }}
+					</div>
+					<div class="todo-status">
+						<form method="POST">
+							{% csrf_token %}
+							{% if todo.completed %}
+								<input type="checkbox" data-pk="{{ todo.pk }}" title="Uncheck this todo" checked />
+							{% else %}
+								<input type="checkbox" data-pk="{{ todo.pk }}" title="Check this todo" />
+							{% endif %}
+						</form>
+						<span class="{{ todo.get_due_info.class_tag }}">
+							{{ todo.get_due_info.status }}
+						</span>
+					</div>
+				</div>
+				<div class="item-col-2">
+					<a href="{% url 'todo:todo_edit' pk=todo.pk %}" title="Edit this todo">
+						<i class="far fa-edit"></i>
+					</a>
+					<button type="button" class="delete-button" title="Delete this todo" data-url="{% url 'todo:todo_delete' pk=todo.pk %}">
+						<i class="far fa-trash-alt"></i>
+					</button>
+				</div>
+			</div>
+		{% empty %}
+			<div class="empty-todo-list">
+				<p>No Todos to Display</p>
+			</div>
+		{% endfor %}
+	</div>
+	<div class="form-container" id="form-container">
+		<form method="POST" id="todo-form">
+			{% csrf_token %}
+			{{ form.as_p }}
+			<button type="submit" class="save-button">Save Todo</button>
+		</form>
+	</div>
+</div>
+{% endblock content %}
 
-		<script src="{% static 'todo/js/main.js' %}"></script>
-	</body>
-</html>
+{% block script %}
+<script src="{% static 'todo/js/main.js' %}"></script>
+{% endblock script %}

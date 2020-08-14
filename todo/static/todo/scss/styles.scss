@@ -10,6 +10,10 @@
   box-sizing: border-box;
 }
 
+body{
+  font-family: $primary-font-stack;
+}
+
 :root{
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
@@ -23,24 +27,28 @@ a{
   text-decoration: none;
 }
 
+input,
+button{
+  font-family: inherit;
+} 
+
 .page-wrapper{
   position: relative; // required for the page footer bottom kini
   min-height: 100vh; // required for the page footer bottom kini
-  font-family: $primary-font-stack;
+  background: $secondary-background;
 }
 
 .page-header{
   // border: 1px solid black;
   background: $primary-background;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   align-items: center;
-  padding: 1.15em 0;
+  padding: 1.15em 4% 1.15em 8%;
   
   h1{
-    // border: 1px solid red;
     // text-align: center;
-    width: 40vw;
+    width: 35vw;
 
     a{
       // border: 1px solid black;
@@ -66,10 +74,10 @@ a{
 
   .search-input{
     border: 0;
+    font-size: 0.98rem;
     // border: 1px solid black;
     padding: 0 0.2em;
     width: 90%;
-    font: 0.98rem $primary-font-stack;
     background : inherit;
 
     &:focus{
@@ -129,18 +137,19 @@ a{
       li{
         list-style: none;
 
-        &:first-child{
-          border-bottom: 1px solid lightgrey;
-          padding: 0.5em 1em;
-          letter-spacing: 0.01em;
-          color: $primary-background;
-          @include default-flex-styles;
-        }
-
         i{
           // border: 1px solid red;
           margin-right: 0.5em;
         }
+      }
+      
+      .username{
+        border-bottom: 1px solid lightgrey;
+        padding: 0.5em 1em;
+        letter-spacing: 0.01em;
+        color: $primary-background;
+        @include default-flex-styles;
+        white-space: nowrap;
       }
 
       .logout-link{
@@ -163,10 +172,10 @@ a{
   // reason why you're explicitly setting the top and bottom padding is because you want a footer 
   // that adapts to the page content
   // the bottom padding is actually the important piece, that's why you're not using the syntax shorthand 
-  // form for the padding and also, the reason why the bottom padding is 8rem is because the footer's 
-  // height is 4.8rem and since the padding that you previously chose was 3.2rem, 3.2 + 4.8 = 8rem. durrh
+  // form for the padding and also, the reason why the bottom padding is 7.7rem is because the footer's 
+  // height is 4.5rem and since the padding that you previously chose was 3.2rem, 3.2 + 4.5 = 7.7rem. durrh
 	padding-top: 3.2rem;
-	padding-bottom: 8rem; 
+	padding-bottom: 7.7rem; 
   // padding: 3.2rem 0;
   @include default-flex-styles;
   flex-direction: column;
@@ -181,12 +190,9 @@ a{
 .message{
   border: 1px solid transparent;
 	text-align: center;
-	padding: 1rem 0;
+	padding: 1em 0.35em;
 	margin-bottom: 1rem;
   font-weight: 500;
-  position: fixed;
-  top: 2%;
-  z-index: 2;
   box-shadow: 0 0 0.15rem 0 rgba(0, 0, 0, 0.6);
   
   &-success{
@@ -204,9 +210,15 @@ a{
   }
 }
 
+.pop-up{
+  position: fixed;
+  top: 2%;
+  z-index: 2;
+}
+
 .container{
-	border: 1px solid lightgrey;
-	background: $secondary-background;
+  border: 1px solid lightgrey;
+  background: $alternate-background;
 	box-shadow: $container-box-shadow;
 }
 
@@ -228,7 +240,7 @@ a{
     .move-icon{
       border: 1px solid lightgrey;
       border-radius: $primary-border-radius;
-      background: #fff;
+      background: $alternate-background;
       position: absolute;
       right: 3%;
       padding: 0.2em;
@@ -283,7 +295,7 @@ a{
 
 .todo-name{
 	// border: 1px solid green;
-	font-size: 1.05em;
+  font-size: 1.05rem;
 	padding: 0.3rem 0;
   text-transform: capitalize;
   text-decoration-color: transparent;
@@ -325,24 +337,21 @@ a{
 	border: 1px solid $alternate-color;
 	padding: 0.6em;
 	border-radius: $secondary-border-radius;
-	font-family: $primary-font-stack;
 	margin-bottom: 0.8rem;
 	color: black;
-	background: $secondary-background;
+  background: $secondary-background;
 
   &:focus{
     outline: none;
     // box-shadow: 0.02rem 0.02rem 0.15rem 0 rgba(18, 97, 160, 0.7),
     //       -0.02rem -0.02rem 0.15rem 0 rgba(18, 97, 160, 0.7);
     box-shadow: 0 0 0 0.07rem rgba(18, 97, 160, 0.6);
-    // outline: 2px solid #3895D3;
   }
 }
 
 .text-input{
-	width: 70%;
-	font-size: 1em;
-	// font-size: 90%;
+  width: 70%;
+  font-size: 1rem;
 
   &::placeholder{
     color: grey;
@@ -374,7 +383,7 @@ a{
   // background: #017192;
   // background: #f5f5f5;
 	color: $primary-color;
-	font: 0.95em $primary-font-stack;
+  font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.015em;
 	text-align: center;
@@ -394,7 +403,7 @@ a{
 	position: absolute;
 	bottom: 0;
 	width: 100%;
-  height: 4.8rem;
+  height: 4.5rem;
   @include default-flex-styles;
 	// padding: 1.5rem 0;
 	background: $primary-background;
@@ -416,7 +425,6 @@ a{
 }
 
 .pending{ 
-	// color: yellowgreen;
 	// color: #8ebd2e;
 	color: #ec971f;
 }
@@ -428,9 +436,9 @@ a{
 
 .delete-button{
 	cursor: pointer;
-	border: 0;
-  background: $secondary-background;
-  // background: transparent;
+  border: 0;
+  background: transparent;
+  // background: $secondary-background;
 	color: darkred;
 }
 
@@ -445,7 +453,6 @@ a{
 }
 
 input[type="checkbox"]{
-  // outline: 1px solid black;
   position: relative;
   // visibility: hidden;
   
@@ -481,7 +488,8 @@ input[type="checkbox"]{
 
   &:checked::after{
     content: '✔';
-    font-size: 1.1em;
+    // font-size: 1.1em;
+    font-size: 0.94rem;
     text-align: center;
     color: white;
     background: #008B45;
@@ -494,7 +502,6 @@ input[type="checkbox"]{
 .strike{
   text-decoration: line-through;
   text-decoration-color: rgb(100, 100, 100);
-  // opacity: 0.8;
   // color: rgb(85, 85, 85);
   color: rgb(100, 100, 100);
   transition: all 0.3s ease-in;

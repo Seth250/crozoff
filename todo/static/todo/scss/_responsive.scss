@@ -1,8 +1,6 @@
 $md-col-1-width: 80%;
 $md-font-size: 96%;
-
-$sm-col-1-width: 74%;
-$sm-font-size: 95%;
+$sm-col-1-width: 76%;
 
 @media only screen and (max-width: 1024px){
 	.page-header{
@@ -17,55 +15,43 @@ $sm-font-size: 95%;
     }
   }
 
+  .todo-header{
+    font-size: 87%;
+  }
+
   .message,
 	.container{
-		width: 75vw;
+		width: 70vw;
   }
-  
-  .todo-header{
-		font-size: 84%;
-	}
 
 	.todo-list-container::-webkit-scrollbar{
 		width: 3px;
   }
   
   .form-container{
-		padding: 1.2rem;
+		padding: 1.25rem;
 	}
 }
 
 @media only screen and (max-width: 768px){
 	.page-header{
-    font-size: 84%;
-
     .search-form{
-      width: 45vw;
+      width: 42vw;
     }
 
     .search-input{
       font-size: 0.95rem;
     }
-
-    .search-icon{
-      font-size: 106%;
-    }
-
-    .detail-bar__user{
-      font-size: 110%;
-    }
   }
     
   .message,
 	.container{
-		width: 86vw;
+		width: 82vw;
 	}
 }
 
 @media only screen and (max-width: 600px){
   .page-header{
-    font-size: 80%;
-
     h1{
       width: 50vw;
       transition: all 0.3s ease;
@@ -88,7 +74,6 @@ $sm-font-size: 95%;
     }
 
     .search-input{
-      font-size: 0.92rem;
       width: 90%;
       transition: all 0.3s ease;
     }
@@ -99,8 +84,6 @@ $sm-font-size: 95%;
     }
 
     .search-icon{
-      font-size: 110%;
-      padding-top: 0.06em;
       width: 25px;
     }
 
@@ -113,18 +96,17 @@ $sm-font-size: 95%;
     }
   }
 
-	.todo-header{
-		font-size: 80%;
-		// margin-bottom: 0;
+  .todo-header{
+		font-size: 78%;
 	}
 
 	.todo-list-container{
-		padding: 0.5rem;
+		padding: 0.4rem;
 		max-height: 70vh;
 	}
 
 	.todo-item{
-		padding: 0.45rem;
+		padding: 0.5rem 0.4rem;
   }
   
   .item-col-1{
@@ -133,18 +115,19 @@ $sm-font-size: 95%;
 
 	.todo-name{
 		width: (100% / $md-col-1-width) * 100%;
-    font-size: 101%;
+    font-size: $md-font-size;
+    margin-bottom: 0.15em;
   }
   
   .todo-status{
-    font-size: 89%;
+    font-size: 88%;
   }
 
 	.item-col-2{
 		width: 100% - $md-col-1-width;
 		align-items: flex-end;
 		justify-content: space-around;
-		padding: 0.3rem 0.15rem;
+		padding: 0.35rem 0.1rem;
 	}
 
 	.empty-todo-list{
@@ -152,16 +135,8 @@ $sm-font-size: 95%;
   }
   
   .form-container{
-		padding: 1rem 0.8rem;
-    
-    label{
-		  font-size: $md-font-size;
-	  }
-
-	  li{
-      list-style: none;
-      color: red;
-    }
+    padding: 1rem 0.7rem;
+    font-size: $md-font-size;
   }
 
 	.text-input{
@@ -170,29 +145,25 @@ $sm-font-size: 95%;
   }
 
   .date-time-input{
-		font-size: 90%;
+		font-size: 92%;
 		letter-spacing: 0.01em;
 	}
 
 	.save-button{
-		font-size: 90%;
+		font-size: 92%;
+  }
+
+  .page-footer{
+    font-size: 95%;
   }
 }
 
 @media only screen and (max-width: 480px){
   .page-header{
-    font-size: 78%;
+    font-size: 85%;
 
     .search-form{
       padding: 0 0.4em;
-    }
-
-    .search-input{
-      font-size: 0.9rem;
-    }
-
-    .detail-bar__user{
-      font-size: 125%;
     }
   }
 
@@ -201,62 +172,24 @@ $sm-font-size: 95%;
 		width: 92vw;
   }
   
-  .todo-header{
-		font-size: 75%;
-	}
-
-	.todo-list-container{
-		padding: 0.3rem;
-	}
-
-	.todo-item{
-    padding: 0.4rem 0.35rem;
-  }
-  
   .item-col-1{
 		max-width: $sm-col-1-width;
 	}
 
 	.todo-name{
-    // border: 1px solid black;
     width: (100% / $sm-col-1-width) * 100%;
-    margin-bottom: 0.2em;
-    font-size: $sm-font-size;
-  }
-  
-  .todo-status{
-    font-size: 86%;
   }
 
 	.item-col-2{
 		width: 100% - $sm-col-1-width;
   }
-  
-  .form-container{
-    padding: 1rem 0.6rem;
-    
-    label{
-      font-size: $sm-font-size;
-    }
-  }
 
 	.text-input{
 		width: 99%;
-		font-size: $sm-font-size;
   }
   
   .date-time-input{
-		width: 14.5rem;
-		font-size: 85%;
-	}
-
-	.save-button{
-		font-size: 85%;
-		padding: 0.57rem 0;
-  }
-    
-  .page-footer{
-    font-size: 96%;
+    width: 14.5rem;
   }
 }
 
@@ -272,9 +205,8 @@ $sm-font-size: 95%;
       margin-left: 0.2em;
     }
   }
-
   .todo-status{
-    padding: 0.4em 0.15em;
+    padding: 0.4em 0.1em;
   }
 }
 
