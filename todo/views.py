@@ -51,7 +51,8 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 		form_data = json.loads(request.body)
 		form = TodoForm(data=form_data, instance=obj)
 		if request.is_ajax() and form.is_valid():
-			todo_instance = form.save(commit=False)
+			# todo_instance = form.save(commit=False)
+			todo_instance = form.save()
 			todo_dict = todo_instance.__dict__
 			todo_dict.pop('_state')
 			todo_dict['message'] = self.success_message
@@ -80,7 +81,7 @@ class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
 			obj = self.get_object()
 			obj.completed = self.completed
 			obj.date_completed = self.date_completed
-			# obj.save()
+			obj.save()
 			todo_dict = {}
 			todo_dict.update(obj.get_due_info())
 			todo_dict['message'] = self.info_message
@@ -113,7 +114,7 @@ class TodoDeleteView(LoginRequiredMixin, SingleObjectMixin, View):
 
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
-			# self.get_object().delete()
+			self.get_object().delete()
 			todo_dict = {
 				'message': 'Todo Item has been Deleted Successfully!',
 				'message_tag': 'success',
