@@ -2,7 +2,7 @@ from .base import *
 import django_heroku
 import dj_database_url
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['crozapp.herokuapp.com']
 
