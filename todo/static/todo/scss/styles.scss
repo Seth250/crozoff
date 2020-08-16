@@ -294,9 +294,9 @@ button{
 }
 
 .todo-name{
-	// border: 1px solid green;
+  // border: 1px solid green;
   font-size: 1.05rem;
-	padding: 0.3rem 0;
+	padding: 0.3em 0;
   text-transform: capitalize;
   text-decoration-color: transparent;
 }
@@ -434,22 +434,33 @@ button{
 	color: darkgreen;
 }
 
+
+.edit-link{
+  color: #0d5aa7;
+
+  i{
+    font-size: 109%; 
+    pointer-events: none;
+  }
+}
+
+// .fa-edit{
+	// color: #1261A0;
+// 	color: #0d5aa7;
+// 	font-size: 109%;
+// }
+
 .delete-button{
 	cursor: pointer;
   border: 0;
   background: transparent;
   // background: $secondary-background;
-	color: darkred;
-}
-
-.fa-trash-alt{
-	font-size: 135%;
-}
-
-.fa-edit{
-	// color: #1261A0;
-	color: #0d5aa7;
-	font-size: 109%;
+  color: darkred;
+  
+  i{
+    font-size: 135%;
+    pointer-events: none;
+  }
 }
 
 input[type="checkbox"]{
@@ -484,6 +495,8 @@ input[type="checkbox"]{
     // height: 1.1rem;
     background: rgb(224, 224, 224);
     border-radius: 0.2rem;
+    // there's a reason why you're transitioning only these specific items and not all
+    transition: font-size 0.3s linear, content 0.3s linear, color 0.3s linear, background 0.3s linear;
   }
 
   &:checked::after{
@@ -493,7 +506,6 @@ input[type="checkbox"]{
     text-align: center;
     color: white;
     background: #008B45;
-    transition: font-size 0.3s ease-in, content 0.3s ease-in, color 0.3s ease-in, background 0.3s ease-in;
     // background: green;
     // background: #0E8C3A;
   }

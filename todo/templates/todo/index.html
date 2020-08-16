@@ -35,7 +35,7 @@
 					</div>
 				</div>
 				<div class="item-col-2">
-					<a href="{% url 'todo:todo_edit' pk=todo.pk %}" title="Edit this todo">
+					<a href="{% url 'todo:todo_edit' pk=todo.pk %}" class="edit-link" title="Edit this todo">
 						<i class="far fa-edit"></i>
 					</a>
 					<button type="button" class="delete-button" title="Delete this todo" data-url="{% url 'todo:todo_delete' pk=todo.pk %}">

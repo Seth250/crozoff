@@ -79,6 +79,7 @@ async function displayMessage(message, tag){
 	messageBox.classList.add(`message-${tag}`);
 	messageBox.textContent = message;
 	await messageFadeTimeout();
+	// the reason why we're waiting 0.5s in the setTimeout is because the fade class has a transition with 0.5s
 	setTimeout(() => {
 		messageBox.classList.add('hide')
 		messageBox.classList.remove(`message-${tag}`, 'fade');
@@ -171,6 +172,7 @@ function todoCreateFragment(todoObj){
 	const todoStatus = document.createElement('div');
 	todoStatus.classList.add('todo-status');
 	const checkboxForm = document.createElement('form');
+	checkboxForm.setAttribute('method', 'POST');
 	const csrfInput = document.createElement('input');
 	csrfInput.setAttribute('name', 'csrfmiddlewaretoken');
 	csrfInput.setAttribute('type', 'hidden');
@@ -193,11 +195,12 @@ function todoCreateFragment(todoObj){
 	todoCol2.classList.add('item-col-2');
 	const editLink = document.createElement('a');
 	editLink.setAttribute('href', `${todoObj.id}/edit/`);
+	editLink.classList.add('edit-link');
 	editLink.setAttribute('title', 'Edit this todo');
 	editLink.innerHTML = '<i class="far fa-edit"></i>';
 	todoCol2.appendChild(editLink);
 	const deleteButton = document.createElement('button');
-	deleteButton.setAttribute('type', 'submit');
+	deleteButton.setAttribute('type', 'button');
 	deleteButton.classList.add('delete-button');
 	deleteButton.setAttribute('title', 'Delete this todo');
 	deleteButton.setAttribute('data-url', `${todoObj.id}/delete/`);
@@ -218,9 +221,8 @@ function emptyTodoListFragment(){
 	return todoFrag;
 }
 
-function getTodoItemEditInfo(event){
-	event.preventDefault();
-	fetch(this.href, {
+function getTodoItemEditInfo(editLink){
+	fetch(editLink.href, {
 		headers: {
 			'X-Requested-With': 'XMLHttpRequest',
 		}
@@ -229,7 +231,7 @@ function getTodoItemEditInfo(event){
 		document.getElementById('id_item').value = item;
 		// using slice to remove the seconds(:ss) from the date(the date value won't be valid unless it is removed)
 		document.getElementById('id_due_date').value = due_date.slice(0, -3);  
-		todoForm.action = this.href;
+		todoForm.action = editLink.href;
 		todoForm.scrollIntoView(true);
 	  })	
 	  .catch((error) => console.log(error));
@@ -266,25 +268,19 @@ function updateTodoElement(responseObj){
 	smoothScrollIntoView(todoElem);
 }
 
-function updateTodoItemCheckboxDetails(responseObj, todoElem){
-	if (responseObj.action === "check"){
-		todoElem.querySelector('.todo-name').classList.add('strike');
-		todoElem.setAttribute('title', 'Uncheck this todo');		
-	} else {
-		todoElem.querySelector('.todo-name').classList.remove('strike');
-		todoElem.setAttribute('title', 'Check this todo');
-	}
+function updateTodoItemDetails(responseObj, todoElem){
+	todoElem.querySelector('.todo-name').classList.toggle('strike');
 	updateTodoStatus(responseObj, todoElem);
 	displayMessage(responseObj.message, responseObj.message_tag);
 }
 
-function deleteTodoElement(){
-	fetch(this.getAttribute('data-url'), {
+function deleteTodoElement(deleteBtn){
+	fetch(deleteBtn.getAttribute('data-url'), {
 		method: 'POST',
 		headers: getDefaultRequestHeaders()
 	}).then((response) => response.json())
 	  .then((data) => {
-			const todoElem = this.parentElement.parentElement;
+			const todoElem = deleteBtn.parentElement.parentElement;
 		  	todoElem.style.transform = 'translateY(30%) rotateX(15deg)';
 		  	todoElem.style.opacity = '0';
 		  	todoElem.style.transition = 'all 0.3s ease-in';
@@ -300,15 +296,17 @@ function deleteTodoElement(){
 	  .catch((err) => console.log(err));
 }
 
-function ajaxCheckboxAction(){
-	const todoPk = this.getAttribute('data-pk');
+function ajaxCheckboxAction(checkboxElem){
+	const todoPk = checkboxElem.getAttribute('data-pk');
 	const todoElem = document.getElementById(`item-${todoPk}`);
-	fetch(`${todoPk}/${this.checked ? 'check' : 'uncheck'}/`, {
-		method: this.form.method,
+	fetch(`${todoPk}/${checkboxElem.checked ? 'check' : 'uncheck'}/`, {
+		method: checkboxElem.form.method,
 		headers: getDefaultRequestHeaders()
 	}).then((response) => response.json())
-	  .then((data) => updateTodoItemCheckboxDetails(data, todoElem))
+	  .then((data) => updateTodoItemDetails(data, todoElem))
 	  .catch((err) => console.log(err));
+
+	checkboxElem.setAttribute('title', `${checkboxElem.checked ? 'Uncheck' : 'Check'} this todo`);
 }
 
 function ajaxTodoFormSubmit(event){
@@ -325,12 +323,22 @@ function ajaxTodoFormSubmit(event){
 	this.removeAttribute('action');
 }
 
+function delegateClickEvent(event){
+	if (event.target.matches('input[type="checkbox"]')){
+		ajaxCheckboxAction(event.target);
+	// the reason why event.target matches the edit link and not the edit icon (even though you may be clicking the icon) 
+	// is because you set pointer events on the edit icon to None, you also used this same approach for the delete icon
+	} else if (event.target.matches('.edit-link')){
+		event.preventDefault();
+		getTodoItemEditInfo(event.target);
+	} else if (event.target.matches('.delete-button')){
+		deleteTodoElement(event.target);
+	}
+}
+
 function initialize(){
 	const searchBox = document.querySelector('.search-input');
 	searchBox.addEventListener('keyup', searchTodos, false);
-
-	const checkboxes = document.querySelectorAll("input[type='checkbox']");
-	checkboxes.forEach((checkbox) => checkbox.addEventListener('click', ajaxCheckboxAction, false));
 	
 	const searchIcon = document.querySelector('.search-icon');
 	searchIcon.addEventListener('click', mobileSearchBarToggle, false);
@@ -342,13 +350,9 @@ function initialize(){
 	const moveIcon = document.querySelector('.move-icon');
 	moveIcon.addEventListener('click', todoArrangementToggle, false);
 
-	const editLinks = document.querySelectorAll('.item-col-2 a');
-	editLinks.forEach((link) => link.addEventListener('click', getTodoItemEditInfo, false));
+	todoContainer.addEventListener('click', delegateClickEvent, false);
 
 	todoForm.addEventListener('submit', ajaxTodoFormSubmit, false);
-
-	const deleteButtons = document.querySelectorAll('.delete-button');
-	deleteButtons.forEach((button) => button.addEventListener('click', deleteTodoElement, false));
 }
 
 window.addEventListener('load', initialize, false);

@@ -22,7 +22,7 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 		obj = None
 		if pk is not None:
 			obj = get_object_or_404(Todo, pk=pk)
-			if not self.request.user.is_superuser or self.request.user != obj.user:
+			if self.request.user != obj.user:
 				raise PermissionDenied('You cannot access this page')
 
 		return obj
@@ -36,7 +36,7 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 		total_pending = request.user.todos.filter(completed=False).count()
 		todo_list = self.get_queryset()
 
-		# if it is an ajax request and we want to get the data for an object
+		# if it is an ajax request and we want to get the data for an object that we want to update
 		if request.is_ajax() and obj:
 			response_dict = {field.name: field.value() for field in form}
 			return JsonResponse(response_dict)
@@ -72,13 +72,12 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 			todo_dict['action'] = 'update' if obj else 'create' 
 			return JsonResponse(todo_dict)
 
-		else:
-			return redirect("todo:todo_list_create")
-			# form = self.form_class(data=request.POST, instance=obj)
-			# if form.is_valid():
-			# 	form.save()
-			# 	messages.success(request, self.success_message)
-			# 	return redirect("todo:todo_list_create")
+		# else:
+		# 	form = self.form_class(data=request.POST, instance=obj)
+		# 	if form.is_valid():
+		# 		form.save()
+		# 		messages.success(request, self.success_message)
+		# 		return redirect("todo:todo_list_create")
 
 
 class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
@@ -98,7 +97,6 @@ class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
 			todo_dict['message'] = self.info_message
 			todo_dict['message_tag'] = 'info'			
 			todo_dict['total_pending'] = request.user.todos.filter(completed=False).count()
-			todo_dict['action'] = 'check' if self.completed else 'uncheck'
 			return JsonResponse(todo_dict)
 
 
