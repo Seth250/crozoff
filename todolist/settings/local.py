@@ -3,7 +3,7 @@ from django.conf import settings
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['59cb30120a08.ngrok.io', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['d9a44f15ccbe.ngrok.io', 'localhost', '127.0.0.1']
 
 DATABASES = {
     'default': {

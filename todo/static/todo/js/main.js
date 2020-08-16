@@ -303,7 +303,6 @@ function deleteTodoElement(){
 function ajaxCheckboxAction(){
 	const todoPk = this.getAttribute('data-pk');
 	const todoElem = document.getElementById(`item-${todoPk}`);
-	// this.form.action = `${todo_pk}/${this.checked ? 'check' : 'uncheck'}/`;
 	fetch(`${todoPk}/${this.checked ? 'check' : 'uncheck'}/`, {
 		method: this.form.method,
 		headers: getDefaultRequestHeaders()

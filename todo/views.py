@@ -27,11 +27,14 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 
 		return obj
 
+	def get_queryset(self):
+		return self.request.user.todos.all().order_by('order')
+
 	def get(self, request, *args, **kwargs):
 		obj = self.get_object()
 		form = TodoForm(instance=obj)
 		total_pending = request.user.todos.filter(completed=False).count()
-		todo_list = request.user.todos.all().order_by('order');
+		todo_list = self.get_queryset()
 
 		# if it is an ajax request and we want to get the data for an object
 		if request.is_ajax() and obj:
@@ -51,8 +54,15 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 		form_data = json.loads(request.body)
 		form = TodoForm(data=form_data, instance=obj)
 		if request.is_ajax() and form.is_valid():
-			# todo_instance = form.save(commit=False)
-			todo_instance = form.save()
+			todo_instance = form.save(commit=False)
+			if not obj:					
+				with transaction.atomic():
+					for order, instance in enumerate(self.get_queryset(), start=1):
+						instance.order = order
+						instance.save()
+
+			todo_instance.user = request.user
+			todo_instance.save()
 			todo_dict = todo_instance.__dict__
 			todo_dict.pop('_state')
 			todo_dict['message'] = self.success_message
@@ -139,4 +149,3 @@ class TodoOrderSaveView(LoginRequiredMixin, View):
 				'message_tag': 'success'
 			}
 			return JsonResponse(todo_dict)
-
