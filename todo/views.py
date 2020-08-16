@@ -72,12 +72,13 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 			todo_dict['action'] = 'update' if obj else 'create' 
 			return JsonResponse(todo_dict)
 
-		# else:
-		# 	form = self.form_class(data=request.POST, instance=obj)
-		# 	if form.is_valid():
-		# 		form.save(commit=False)
-		# 		messages.success(request, self.success_message)
-		# 		return redirect("todo:todo_list_create")
+		else:
+			return redirect("todo:todo_list_create")
+			# form = self.form_class(data=request.POST, instance=obj)
+			# if form.is_valid():
+			# 	form.save()
+			# 	messages.success(request, self.success_message)
+			# 	return redirect("todo:todo_list_create")
 
 
 class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
