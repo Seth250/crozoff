@@ -2,15 +2,15 @@
 const todoContainer = document.getElementById('todo-list-container');
 const messageBox = document.querySelector('.message');
 const todoForm = document.getElementById('todo-form');
-
-const getCsrfToken = () => document.querySelector('input[name="csrfmiddlewaretoken"]').value;
+const totalPendingElem = document.getElementById('total-pending');
+const csrfToken = document.querySelector('input[name="csrfmiddlewaretoken"]').value;
 
 function getDefaultRequestHeaders(){
 	return {
 		'Accept': 'application/json',
 		'Content-type': 'application/json; charset=UTF-8',
 		'X-Requested-With': 'XMLHttpRequest',
-		'X-CSRFToken': getCsrfToken(),
+		'X-CSRFToken': csrfToken
 	}
 }
 
@@ -176,7 +176,7 @@ function todoCreateFragment(todoObj){
 	const csrfInput = document.createElement('input');
 	csrfInput.setAttribute('name', 'csrfmiddlewaretoken');
 	csrfInput.setAttribute('type', 'hidden');
-	csrfInput.setAttribute('value', getCsrfToken());
+	csrfInput.setAttribute('value', csrfToken);
 	checkboxForm.appendChild(csrfInput);
 	const checkbox = document.createElement('input');
 	checkbox.setAttribute('type', 'checkbox');
@@ -238,7 +238,7 @@ function getTodoItemEditInfo(editLink){
 }
 
 function updatePendingTodoNumber(objValue){
-	document.getElementById('total-pending').textContent = objValue;
+	totalPendingElem.textContent = objValue;
 }
 
 function updateTodoStatus(obj, elem){

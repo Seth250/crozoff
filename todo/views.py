@@ -2,11 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Todo
 from .forms import TodoForm
 from django.utils import timezone
+from django.forms.models import model_to_dict
 from django.contrib import messages
 from django.http import JsonResponse
 from django.db import transaction
 import json
-from django.urls import reverse
+# from django.urls import reverse
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -54,17 +55,17 @@ class BaseTodoObjectView(LoginRequiredMixin, View):
 		form_data = json.loads(request.body)
 		form = TodoForm(data=form_data, instance=obj)
 		if request.is_ajax() and form.is_valid():
-			todo_instance = form.save(commit=False)
-			if not obj:					
-				with transaction.atomic():
+			with transaction.atomic():
+				todo_instance = form.save(commit=False)
+				if not obj:
 					for order, instance in enumerate(self.get_queryset(), start=1):
 						instance.order = order
 						instance.save()
 
-			todo_instance.user = request.user
-			todo_instance.save()
-			todo_dict = todo_instance.__dict__
-			todo_dict.pop('_state')
+				todo_instance.user = request.user
+				todo_instance.save()
+
+			todo_dict = model_to_dict(todo_instance, fields=['id', 'item', 'order'])
 			todo_dict['message'] = self.success_message
 			todo_dict['message_tag'] = 'success'
 			todo_dict['total_pending'] = request.user.todos.filter(completed=False).count()
