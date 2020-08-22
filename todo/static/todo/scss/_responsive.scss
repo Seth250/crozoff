@@ -27,7 +27,7 @@ $sm-col-1-width: 76%;
 	.todo-list-container::-webkit-scrollbar{
 		width: 3px;
   }
-  
+
   .form-container{
 		padding: 1.25rem;
 	}
@@ -38,12 +38,8 @@ $sm-col-1-width: 76%;
     .search-form{
       width: 42vw;
     }
-
-    .search-input{
-      font-size: 0.95rem;
-    }
   }
-    
+  
   .message,
 	.container{
 		width: 82vw;
@@ -55,6 +51,10 @@ $sm-col-1-width: 76%;
     h1{
       width: 50vw;
       transition: all 0.3s ease;
+
+      a{
+        font-size: 92%;
+      }
     }
 
     .heading-collapse-mobile{
@@ -70,11 +70,10 @@ $sm-col-1-width: 76%;
 
     .form-open-mobile{
       width: 75vw;
-      // width: 60vw;
     }
 
     .search-input{
-      width: 90%;
+      font-size: $md-font-size;
       transition: all 0.3s ease;
     }
 
@@ -84,7 +83,7 @@ $sm-col-1-width: 76%;
     }
 
     .search-icon{
-      width: 25px;
+      width: 28px;
     }
 
     .detail-bar__nav{
@@ -114,7 +113,7 @@ $sm-col-1-width: 76%;
 	}
 
 	.todo-name{
-		width: (100% / $md-col-1-width) * 100%;
+		width: calc-width-ext($md-font-size);
     font-size: $md-font-size;
     margin-bottom: 0.15em;
   }
@@ -141,17 +140,14 @@ $sm-col-1-width: 76%;
 
 	.text-input{
 		width: 90%;
-		font-size: $md-font-size;
+    font-size: $md-font-size;
+    // font-size: inherit;
   }
 
-  .date-time-input{
+  .date-time-input,
+  .save-button{
 		font-size: 92%;
-		letter-spacing: 0.01em;
 	}
-
-	.save-button{
-		font-size: 92%;
-  }
 
   .page-footer{
     font-size: 95%;
@@ -159,14 +155,6 @@ $sm-col-1-width: 76%;
 }
 
 @media only screen and (max-width: 480px){
-  .page-header{
-    font-size: 85%;
-
-    .search-form{
-      padding: 0 0.4em;
-    }
-  }
-
 	.message,
 	.container{
 		width: 92vw;
@@ -177,7 +165,7 @@ $sm-col-1-width: 76%;
 	}
 
 	.todo-name{
-    width: (100% / $sm-col-1-width) * 100%;
+    width: calc-width-ext($sm-col-1-width);
   }
 
 	.item-col-2{
@@ -210,9 +198,16 @@ $sm-col-1-width: 76%;
   }
 }
 
+@media only screen and (min-width: 1600px){
+	.message,
+	.container{
+		width: 48vw;
+	}
+}
+
 @media only screen and (min-width: 1920px){
 	.message,
 	.container{
-		width: 50vw;
+		width: 42vw;
 	}
 }

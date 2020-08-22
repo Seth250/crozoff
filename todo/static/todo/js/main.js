@@ -40,7 +40,8 @@ function updateTodoPosition(event){
 
 function searchTodos(event){
 	const searchText = event.target.value.toLowerCase()
-	const todoNames = [...document.querySelectorAll('.todo-name')];
+	// const todoNames = [...document.querySelectorAll('.todo-name')];
+	const todoNames = document.querySelectorAll('.todo-name');
 	todoNames.forEach((name) => {
 		const nameText = name.textContent.toLowerCase();
 		const todoElem = name.parentElement.parentElement;
@@ -234,7 +235,7 @@ function getTodoItemEditInfo(editLink){
 		todoForm.action = editLink.href;
 		todoForm.scrollIntoView(true);
 	  })	
-	  .catch((error) => console.log(error));
+	  .catch((err) => console.log(err));
 }
 
 function updatePendingTodoNumber(objValue){

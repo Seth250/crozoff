@@ -47,20 +47,17 @@ button{
   padding: 1.15em 4% 1.15em 8%;
   
   h1{
-    // text-align: center;
     width: 35vw;
 
     a{
       // border: 1px solid black;
       color: $primary-color;
-      padding: 0.1em;
     }
   }
 
   .search-form{
     height: 2.2rem;
     @include default-flex-styles;
-    padding: 0 0.1em;
     width: 30vw;
     border: 1px solid transparent;
     border-radius: 1.1rem;
@@ -74,9 +71,10 @@ button{
 
   .search-input{
     border: 0;
-    font-size: 0.98rem;
+    font-size: 0.97rem;
+    letter-spacing: 0.015em;
     // border: 1px solid black;
-    padding: 0 0.2em;
+    padding-right: 0.5em;
     width: 90%;
     background : inherit;
 
@@ -86,7 +84,7 @@ button{
   }
 
   .search-icon{
-    width: 8%;
+    width: 9%;
     text-align: center;
     font-size: 105%;
     color: $primary-background;
@@ -106,7 +104,7 @@ button{
 
     &__user{
       border: 1px solid transparent;
-      font-size: 105%;
+      font-size: 110%;
       font-weight: 500;
       height: 2.15rem;
       width: 2.2rem;
@@ -183,7 +181,7 @@ button{
 
 .message, 
 .container{
-  width: 54vw;
+  width: 52vw;
   border-radius: $primary-border-radius;
 }
 
@@ -295,7 +293,7 @@ button{
 
 .todo-name{
   // border: 1px solid green;
-  font-size: 1.05rem;
+  font-size: 1.06rem;
 	padding: 0.3em 0;
   text-transform: capitalize;
   text-decoration-color: transparent;

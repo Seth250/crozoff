@@ -23,8 +23,6 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-# ALLOWED_HOSTS = ['crozapp.herokuapp.com', '59cb30120a08.ngrok.io', 'localhost']
-
 # Application definition
 
 INSTALLED_APPS = [

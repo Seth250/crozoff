@@ -24,7 +24,7 @@ class UserSignUpForm(UserCreationForm):
         )
     )
     password1 = forms.CharField(
-        label=_("Password"),
+        label=_('Password'),
         label_suffix="",
         strip=False,
         widget=forms.PasswordInput(

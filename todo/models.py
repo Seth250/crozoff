@@ -8,7 +8,7 @@ from django.conf import settings
 class Todo(models.Model):
 	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='todos', 
 							 related_query_name='todo')
-	item = models.CharField(max_length=100, verbose_name="todo item")
+	item = models.CharField(max_length=200, verbose_name="todo item")
 	completed = models.BooleanField(default=False)
 	due_date = models.DateTimeField(verbose_name="due date")
 	order = models.PositiveIntegerField(default=0)
