@@ -137,9 +137,9 @@ function todoArrangementToggle(event){
 				method: 'POST',
 				headers: getDefaultRequestHeaders(),
 				body: JSON.stringify(todoOrderArr)
-			}).then((response) => response.json())
+			}).then((response) => response.ok ? response.json() : Promise.reject(response))
 			  .then(({message, message_tag}) => displayMessage(message, message_tag))
-			  .catch((err) => console.log(err));
+			  .catch((err) => errorHandler(err));
 		}
 	}
 }
@@ -227,7 +227,7 @@ function getTodoItemEditInfo(editLink){
 		headers: {
 			'X-Requested-With': 'XMLHttpRequest',
 		}
-	}).then((response) => response.json())
+	}).then((response) => response.ok ? response.json() : Promise.reject(response))
 	  .then(({ item, due_date }) => {
 		document.getElementById('id_item').value = item;
 		// using slice to remove the seconds(:ss) from the date(the date value won't be valid unless it is removed)
@@ -235,7 +235,17 @@ function getTodoItemEditInfo(editLink){
 		todoForm.action = editLink.href;
 		todoForm.scrollIntoView(true);
 	  })	
-	  .catch((err) => console.log(err));
+	  .catch((err) => errorHandler(err));
+}
+
+async function errorHandler(error){
+	if (error.status){
+		const { message, message_tag } = await error.json();
+		displayMessage(message, message_tag);
+	} else {
+		console.error(error);
+		displayMessage('An Unexpected Error Occurred', 'error');
+	}
 }
 
 function updatePendingTodoNumber(objValue){
@@ -279,7 +289,7 @@ function deleteTodoElement(deleteBtn){
 	fetch(deleteBtn.getAttribute('data-url'), {
 		method: 'POST',
 		headers: getDefaultRequestHeaders()
-	}).then((response) => response.json())
+	}).then((response) => response.ok ? response.json() : Promise.reject(response))
 	  .then((data) => {
 			const todoElem = deleteBtn.parentElement.parentElement;
 		  	todoElem.style.transform = 'translateY(30%) rotateX(15deg)';
@@ -294,7 +304,7 @@ function deleteTodoElement(deleteBtn){
 			}, 350);
 			displayMessage(data.message, data.message_tag);
 		})
-	  .catch((err) => console.log(err));
+	  .catch((err) => errorHandler(err));
 }
 
 function ajaxCheckboxAction(checkboxElem){
@@ -303,9 +313,9 @@ function ajaxCheckboxAction(checkboxElem){
 	fetch(`${todoPk}/${checkboxElem.checked ? 'check' : 'uncheck'}/`, {
 		method: checkboxElem.form.method,
 		headers: getDefaultRequestHeaders()
-	}).then((response) => response.json())
+	}).then((response) => response.ok ? response.json() : Promise.reject(response))
 	  .then((data) => updateTodoItemDetails(data, todoElem))
-	  .catch((err) => console.log(err));
+	  .catch((err) => errorHandler(err));
 
 	checkboxElem.setAttribute('title', `${checkboxElem.checked ? 'Uncheck' : 'Check'} this todo`);
 }
@@ -316,9 +326,9 @@ function ajaxTodoFormSubmit(event){
 		method: this.method,
 		headers: getDefaultRequestHeaders(),
 		body: JSON.stringify(Object.fromEntries(new FormData(this)))
-	}).then((response) => response.json())
+	}).then((response) => response.ok ? response.json() : Promise.reject(response))
 	  .then((data) => data.action === "create" ? createTodoElement(data) : updateTodoElement(data))
-	  .catch((err) => console.log(err));
+	  .catch((err) => errorHandler(err));
 
 	this.reset();
 	this.removeAttribute('action');

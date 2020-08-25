@@ -4,7 +4,7 @@ from .forms import TodoForm
 from django.utils import timezone
 from django.forms.models import model_to_dict
 from django.contrib import messages
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.db import transaction
 import json
 # from django.urls import reverse
@@ -15,77 +15,89 @@ from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
-class BaseTodoObjectView(LoginRequiredMixin, View):
-	success_message = None
+def action_error():
+	response_dict = {'message': 'Action could not be completed, Refresh and retry', 'message_tag': 'error'}
+	return JsonResponse(response_dict, status=400)
+
+
+class AjaxFormMixin(object):
+
+	def form_valid(self, form):
+		instance = form.save(commit=False)
+		instance.user = self.request.user
+		instance.save()
+		todo_dict = model_to_dict(instance, fields=['id', 'item', 'order'])
+		todo_dict['message'] = self.success_message
+		todo_dict['message_tag'] = 'success'
+		todo_dict['total_pending'] = self.request.user.todos.filter(completed=False).count()
+		todo_dict.update(instance.get_due_info())
+		todo_dict['action'] = self.action
+		return JsonResponse(todo_dict, status=200)
+
+
+class TodoListCreateView(LoginRequiredMixin, AjaxFormMixin, View):
+	
+	def get_queryset(self):
+		return self.request.user.todos.order_by('order')
+
+	def get(self, request, *args, **kwargs):
+		form = TodoForm()
+		context = {
+			'form': form,
+			'todo_list': self.get_queryset(),
+			'total_pending': self.request.user.todos.filter(completed=False).count()
+		}
+		return render(request, 'todo/index.html', context)
+
+	def post(self, request, *args, **kwargs):
+		form_data = json.loads(request.body)
+		form = TodoForm(data=form_data)
+		if request.is_ajax() and form.is_valid():
+			with transaction.atomic():
+				for order, instance in enumerate(self.get_queryset(), start=1):
+					instance.order = order
+					instance.save()
+
+			self.success_message = 'New Todo Item has been Added!'
+			self.action = 'create'
+			return self.form_valid(form)
+
+		return action_error()
+
+
+class TodoUpdateView(LoginRequiredMixin, AjaxFormMixin, View):
 
 	def get_object(self):
-		pk = self.kwargs.get('pk')
-		obj = None
-		if pk is not None:
-			obj = get_object_or_404(Todo, pk=pk)
-			if self.request.user != obj.user:
-				raise PermissionDenied('You cannot access this page')
+		pk_ = self.kwargs.get('pk')
+		obj = get_object_or_404(Todo, pk=pk_)
+		if self.request.user != obj.user:
+			raise PermissionDenied
 
 		return obj
-
-	def get_queryset(self):
-		return self.request.user.todos.all().order_by('order')
 
 	def get(self, request, *args, **kwargs):
 		obj = self.get_object()
 		form = TodoForm(instance=obj)
-		total_pending = request.user.todos.filter(completed=False).count()
-		todo_list = self.get_queryset()
-
-		# if it is an ajax request and we want to get the data for an object that we want to update
-		if request.is_ajax() and obj:
+		if request.is_ajax():
 			response_dict = {field.name: field.value() for field in form}
-			return JsonResponse(response_dict)
-			
-		else:
-			context = {
-				'todo_list': todo_list,
-				'total_pending': total_pending,
-				'form': form
-			}
-			return render(request, 'todo/index.html', context)
+			return JsonResponse(response_dict, status=200)
+
+		raise Http404
 
 	def post(self, request, *args, **kwargs):
 		obj = self.get_object()
 		form_data = json.loads(request.body)
 		form = TodoForm(data=form_data, instance=obj)
 		if request.is_ajax() and form.is_valid():
-			with transaction.atomic():
-				todo_instance = form.save(commit=False)
-				if not obj:
-					for order, instance in enumerate(self.get_queryset(), start=1):
-						instance.order = order
-						instance.save()
+			self.success_message = 'Todo Item has been Updated!'
+			self.action = 'update'
+			return self.form_valid(form)
 
-				todo_instance.user = request.user
-				todo_instance.save()
-
-			todo_dict = model_to_dict(todo_instance, fields=['id', 'item', 'order'])
-			todo_dict['message'] = self.success_message
-			todo_dict['message_tag'] = 'success'
-			todo_dict['total_pending'] = request.user.todos.filter(completed=False).count()
-			todo_dict.update(todo_instance.get_due_info())
-			todo_dict['action'] = 'update' if obj else 'create' 
-			return JsonResponse(todo_dict)
-
-		# else:
-		# 	form = self.form_class(data=request.POST, instance=obj)
-		# 	if form.is_valid():
-		# 		form.save()
-		# 		messages.success(request, self.success_message)
-		# 		return redirect("todo:todo_list_create")
+		return action_error()
 
 
 class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
 	model = Todo
-	info_message = None
-	completed = False
-	date_completed = None
 
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
@@ -98,25 +110,27 @@ class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
 			todo_dict['message'] = self.info_message
 			todo_dict['message_tag'] = 'info'			
 			todo_dict['total_pending'] = request.user.todos.filter(completed=False).count()
-			return JsonResponse(todo_dict)
+			return JsonResponse(todo_dict, status=200)
 
-
-class TodoListCreateView(BaseTodoObjectView):
-	success_message = 'Todo Item has been Added Successfully!'
-
-
-class TodoUpdateView(BaseTodoObjectView):
-	success_message = 'Todo Item has been Updated!'
+		return action_error()
 
 
 class TodoCheckView(TodoStatusUpdateView):
-	info_message = 'Status has been Changed to Completed!'
-	completed = True
-	date_completed = timezone.now()
+
+	def post(self, request, *args, **kwargs):
+		self.info_message = 'Status has been Changed to Completed!'
+		self.completed = True
+		self.date_completed = timezone.now()
+		return super(TodoCheckView, self).post(request, *args, **kwargs)
 
 
 class TodoUncheckView(TodoStatusUpdateView):
-	info_message = 'Status change has been reverted!'
+
+	def post(self, request, *args, **kwargs):
+		self.info_message = 'Status change has been reverted!'
+		self.completed = False
+		self.date_completed = None
+		return super(TodoUncheckView, self).post(request, *args, **kwargs)
 
 
 class TodoDeleteView(LoginRequiredMixin, SingleObjectMixin, View):
@@ -130,7 +144,9 @@ class TodoDeleteView(LoginRequiredMixin, SingleObjectMixin, View):
 				'message_tag': 'success',
 				'total_pending': request.user.todos.filter(completed=False).count()
 			}
-			return JsonResponse(todo_dict)
+			return JsonResponse(todo_dict, status=200)
+
+		return action_error()
 
 
 class TodoOrderSaveView(LoginRequiredMixin, View):
@@ -144,8 +160,7 @@ class TodoOrderSaveView(LoginRequiredMixin, View):
 					obj.order = data['order']
 					obj.save()
 
-			todo_dict = {
-				'message': 'Order has been Saved Successfully!', 
-				'message_tag': 'success'
-			}
-			return JsonResponse(todo_dict)
+			todo_dict = {'message': 'Order has been Saved Successfully!', 'message_tag': 'success'}
+			return JsonResponse(todo_dict, status=200)
+
+		return action_error()
