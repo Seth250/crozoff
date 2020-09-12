@@ -8,6 +8,9 @@ $primary-border-radius: 4px;
 $secondary-border-radius: 0.3rem;
 $container-box-shadow: 0.05rem 0.075rem 0.2rem 0 rgba(0, 0, 0, 0.6);
 $box-height: 2.85rem;
+$md-col-1-width: 80%;
+$md-font-size: 96%;
+$sm-col-1-width: 76%;
 
 @mixin default-flex-styles{
   display: flex;

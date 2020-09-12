@@ -340,7 +340,7 @@ function delegateClickEvent(event){
 	// the reason why event.target matches the edit link and not the edit icon (even though you may be clicking the icon) 
 	// is because you set pointer events on the edit icon to None, you also used this same approach for the delete icon
 	} else if (event.target.matches('.edit-link')){
-		event.preventDefault();
+		event.preventDefault(); // prevents the page from redirecting
 		getTodoItemEditInfo(event.target);
 	} else if (event.target.matches('.delete-button')){
 		deleteTodoElement(event.target);
