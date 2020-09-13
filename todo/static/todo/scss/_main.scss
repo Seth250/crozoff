@@ -2,11 +2,11 @@
   // reason why you're explicitly setting the top and bottom padding is because you want a footer 
   // that adapts to the page content
   // the bottom padding is actually the important piece, that's why you're not using the syntax shorthand 
-  // form for the padding and also, the reason why the bottom padding is 7.2rem is because the footer's 
-  // height is 4rem and since the padding that you previously chose was 3.2rem, 3.2 + 4 = 7.2rem. durrh
-	padding-top: 3.2rem;
-	padding-bottom: 7.2rem; 
-  // padding: 3.2rem 0;
+  // form for the padding and also, the reason why the bottom padding is 7.2em is because the footer's 
+  // height is 4rem and since the padding that you previously chose was 3.2em, 3.2 + 4 = 7.2em. durrh
+	padding-top: 3.2em;
+	padding-bottom: 7.2em; 
+  // padding: 3.2em 0;
   @include default-flex-styles;
   flex-direction: column;
 }
@@ -63,7 +63,8 @@
   border-top-right-radius: $primary-border-radius;
   // text-align: center;
 	color: $alternate-color;
-	padding: 0.9rem 0;
+  // padding: 0.9rem 0;
+  padding: 1em 0;
   margin-bottom: 0.2rem;
   box-shadow: 0 0.025rem 0.15rem 0 rgba(0, 0, 0, 0.6);
 
@@ -366,7 +367,7 @@ input[type="checkbox"]{
   }
 
   .todo-header{
-    font-size: 87%;
+    font-size: 85%;
   }
 
   .todo-list-container::-webkit-scrollbar{
@@ -387,7 +388,7 @@ input[type="checkbox"]{
 
 @media only screen and (max-width: 600px){
   .todo-header{
-		font-size: 78%;
+		font-size: 76%;
 	}
 
 	.todo-list-container{
