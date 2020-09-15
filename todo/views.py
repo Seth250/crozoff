@@ -11,7 +11,7 @@ import json
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.exceptions import PermissionDenied
+# from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
@@ -33,6 +33,12 @@ class AjaxFormMixin(object):
 		todo_dict.update(instance.get_due_info())
 		todo_dict['action'] = self.action
 		return JsonResponse(todo_dict, status=200)
+
+
+class BaseTodoView(SingleObjectMixin, View):
+
+	def get_queryset(self):
+		return self.request.user.todos.all()
 
 
 class TodoListCreateView(LoginRequiredMixin, AjaxFormMixin, View):
@@ -65,15 +71,7 @@ class TodoListCreateView(LoginRequiredMixin, AjaxFormMixin, View):
 		return action_error()
 
 
-class TodoUpdateView(LoginRequiredMixin, AjaxFormMixin, View):
-
-	def get_object(self):
-		pk_ = self.kwargs.get('pk')
-		obj = get_object_or_404(Todo, pk=pk_)
-		if self.request.user != obj.user:
-			raise PermissionDenied
-
-		return obj
+class TodoUpdateView(LoginRequiredMixin, AjaxFormMixin, BaseTodoView):
 
 	def get(self, request, *args, **kwargs):
 		obj = self.get_object()
@@ -96,8 +94,7 @@ class TodoUpdateView(LoginRequiredMixin, AjaxFormMixin, View):
 		return action_error()
 
 
-class TodoStatusUpdateView(LoginRequiredMixin, SingleObjectMixin, View):
-	model = Todo
+class TodoStatusUpdateView(LoginRequiredMixin, BaseTodoView):
 
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
@@ -133,8 +130,7 @@ class TodoUncheckView(TodoStatusUpdateView):
 		return super(TodoUncheckView, self).post(request, *args, **kwargs)
 
 
-class TodoDeleteView(LoginRequiredMixin, SingleObjectMixin, View):
-	model = Todo
+class TodoDeleteView(LoginRequiredMixin, BaseTodoView):
 
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
@@ -157,6 +153,9 @@ class TodoOrderSaveView(LoginRequiredMixin, View):
 			with transaction.atomic():
 				for data in todo_data:
 					obj = get_object_or_404(Todo, pk=data['pk'])
+					if obj.user != request.user:
+						return action_error()
+
 					obj.order = data['order']
 					obj.save()
 
