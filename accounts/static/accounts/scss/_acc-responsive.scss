@@ -1,21 +1,21 @@
 @media only screen and (max-width: 1024px){
   .container-acc{
-    width: 45vw;
+    width: 48vw;
   }
 }
 
 @media only screen and (max-width: 768px){
   .container-acc{
-    width: 55vw;
+    width: 60vw;
 
     &__header{
-      font-size: 90%;
+      font-size: 92%;
       letter-spacing: 0.02em; 
     }
   }
   .login-error{
     font-size: 100%;
-    letter-spacing: 0.015em;
+    letter-spacing: 0.02em;
   }
   .form-container-acc{
     padding: 1em 0.75em;
@@ -49,13 +49,13 @@
     }
   }
   .standard-input{
-    width: 88.5%;
+    width: 88%;
   }
   .password-input{
-    width: 81.5%;
+    width: 81%;
   }
   .input-container > i{
-    width: 10.5%;
+    width: 11%;
   }
 }
 
