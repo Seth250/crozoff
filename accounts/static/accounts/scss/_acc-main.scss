@@ -1,0 +1,190 @@
+.form-container-acc{
+  padding: 1em;
+}
+
+.form-row{
+  // border: 1px solid black;
+  padding: 0.7em 1em;
+
+  label{
+    // border: 1px solid blue;
+    font-weight: 500;
+  }
+
+  .form-message{
+    text-align: center;
+  }
+
+  p{
+    font-size: 103%;    
+    padding: 0.3em 0;
+
+    a{
+      font-weight: 500;
+      color: $alternate-color;
+    }
+  }
+
+  ul.errorlist{
+    list-style: none;
+    color: firebrick;
+    padding-top: 0.15em;
+    font-weight: 500;
+    font-size: 102%;
+  }
+}
+
+.input-container{
+  border: 1px solid lightgrey;
+  border-radius: $primary-border-radius;
+  // background: transparent;
+  background: $secondary-background;
+  height: $box-height;
+  padding: 0 0.3em;
+  margin-top: 0.2em;
+  display: flex;
+  align-items: center;
+
+  &:focus-within{
+    box-shadow: 0 0 0 0.07rem rgba(18, 97, 160, 0.6);
+  }
+
+  .fa-user{
+    font-size: 104%;
+    padding-bottom: 1px;
+  }
+
+  > i{
+    width: 9.5%;    
+    // border: 1px solid red;
+    text-align: center;
+  }
+
+  i:not(.fa-lock){
+    color: $primary-background;
+  }
+}
+
+.text-input-acc{
+  border: 0;
+  // border: 1px solid black;
+  font-size: 1rem;
+  background: inherit;
+
+  &:focus{
+    outline: none;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    transition: color 3600s ease-out, background 3600s ease-out;
+  }
+}
+
+.standard-input{
+  width: 90%;
+}
+
+.password-input{
+  width: 83%;
+}
+
+.fa-lock{
+	color: transparent;
+	-webkit-text-stroke-width: 0.1rem;
+  -webkit-text-stroke-color: $primary-background;
+  font-size: 103%;
+}
+
+.password-toggler{
+  position: relative;
+  // border: 1px solid blue;
+  width: 7%;
+  cursor: pointer;
+  @include default-flex-styles;
+
+  i{
+    position: absolute;
+    font-size: 103%;
+    // border: 1px solid blue;
+    transition: all 0.3s ease-in;
+  }
+
+  .fa-eye-slash{
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fa-eye{
+    opacity: 0;
+    transform: translateY(40%);
+  }
+
+  .eye-slash-hide{
+    opacity: 0;
+    transform: translateY(-40%);
+  }
+
+  .eye-show{
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.submit-button{
+  border: 1px solid transparent;
+  width: 100%;
+  border-radius: $secondary-border-radius;
+	font-size: 1rem;
+  letter-spacing: 0.015em;
+  height: $box-height;
+  background: #1f588f;
+	color: white;
+	box-shadow: 0.05rem 0.05rem 0.1rem 0 rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  
+  &:hover{
+    background: #18446F;
+  }
+
+  &:focus{
+    outline: none;
+    box-shadow: 0 0 0 0.1rem rgb(0, 0, 0);
+  }
+}
+
+@media only screen and (max-width: 768px){
+  .form-container-acc{
+    padding: 1em 0.75em;
+  }
+  .form-row{
+    label{
+      letter-spacing: 0.02em;
+    }
+  }
+  .text-input-acc{
+    font-size: 98%
+  }
+}
+
+@media only screen and (max-width: 480px){
+  .form-row{
+    padding: 0.5em 0.25em;
+    font-size: 97%;
+    
+    p{
+      letter-spacing: 0.01em;
+    }
+  }
+  .standard-input{
+    width: 88%;
+  }
+  .password-input{
+    width: 81%;
+  }
+  .input-container > i{
+    width: 11%;
+  }
+}

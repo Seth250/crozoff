@@ -1,3 +1,30 @@
+.page-header-acc{
+  display: block;
+}
+
+.container-acc{
+  border: 1px solid lightgrey;
+  width: 36vw;
+  padding: 2em 0;
+  border-radius: $secondary-border-radius;
+  background: $alternate-background;
+  box-shadow: $container-box-shadow;
+
+  &__header{
+    // border: 1px solid red;
+    margin-bottom: 0.5em; 
+    text-align: center;
+  }
+}
+
+.login-error{
+  padding: 0.6em 0;
+	text-align: center;
+	color: firebrick;
+	font-size: 107%;
+  font-weight: 500;
+}
+
 @media only screen and (max-width: 1024px){
   .container-acc{
     width: 48vw;
@@ -17,17 +44,6 @@
     font-size: 100%;
     letter-spacing: 0.02em;
   }
-  .form-container-acc{
-    padding: 1em 0.75em;
-  }
-  .form-row{
-    label{
-      letter-spacing: 0.02em;
-    }
-  }
-  .text-input-acc{
-    font-size: 98%
-  }
 }
 
 @media only screen and (max-width: 600px){
@@ -40,23 +56,6 @@
   .container-acc{
     width: 90vw;
   } 
-  .form-row{
-    padding: 0.5em 0.25em;
-    font-size: 97%;
-    
-    p{
-      letter-spacing: 0.01em;
-    }
-  }
-  .standard-input{
-    width: 88%;
-  }
-  .password-input{
-    width: 81%;
-  }
-  .input-container > i{
-    width: 11%;
-  }
 }
 
 @media only screen and (min-width: 1920px){
