@@ -18,21 +18,21 @@
 				<h1>
 					<a href="{% url 'todo:todo_list_create' %}">Croz App</a>
         </h1>
-        {% if request.user.is_authenticated %}
-        <div class="search-form">
+				{% if request.user.is_authenticated %}
+				<div class="search-form">
 					<i class="fas fa-search search-icon"></i>
-					<input type="text" class="search-input input-collapse-mobile" placeholder="Search todos..." />
-        </div>
-        <div class="detail-bar" tabindex="0">
-          <span class="detail-bar__user">{{ request.user | upper | slice:"1" }}</span>
-          <i class="fas fa-sort-down detail-bar__icon"></i>
-          <nav class="detail-bar__nav hide">
-            <ul>
-              <li class="username"><i class="fas fa-user"></i><strong>{{ request.user }}</strong></li>
-              <li><a href="{% url 'accounts:logout' %}" class="logout-link">Logout</a></li>
-            </ul>
-          </nav>
-        </div>
+					<input type="text" class="search-input" placeholder="Search todos..." />
+				</div>
+				<div class="detail-bar" tabindex="0">
+					<span class="detail-bar__user">{{ request.user | upper | slice:"1" }}</span>
+					<i class="fas fa-sort-down detail-bar__icon"></i>
+					<nav class="detail-bar__nav hide">
+						<ul>
+							<li class="username"><i class="fas fa-user"></i><strong>{{ request.user }}</strong></li>
+							<li><a href="{% url 'accounts:logout' %}" class="logout-link">Logout</a></li>
+						</ul>
+					</nav>
+				</div>
         {% endif %}
       </header>
 

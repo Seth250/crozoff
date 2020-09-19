@@ -57,12 +57,12 @@ function mobileSearchBarToggle(event){
 	if (window.matchMedia("(max-width: 600px)").matches){
 		event.target.classList.toggle('fa-search');
 		event.target.classList.toggle('fa-arrow-left');
-		document.querySelector('.detail-bar').classList.toggle('heading-collapse-mobile');
-		document.querySelector('.page-header h1').classList.toggle('heading-collapse-mobile');
-		document.querySelector('.search-form').classList.toggle('form-open-mobile');
-		const searchInput = document.querySelector('.search-input');
-		searchInput.classList.toggle('input-collapse-mobile');
-		searchInput.focus();
+		// document.querySelector('.detail-bar').classList.toggle('heading-collapse-mobile');
+		document.querySelector('.page-header h1').classList.toggle('collapse-mobile');
+		// document.querySelector('.search-form').classList.toggle('form-open-mobile');
+		document.querySelector('.search-input').focus();
+		// searchInput.classList.toggle('input-collapse-mobile');
+		// searchInput.focus();
 	}
 }
 

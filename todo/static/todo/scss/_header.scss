@@ -7,7 +7,8 @@
   padding: 0.85em 4% 0.85em 8%;
   
   h1{
-    width: 32vw;
+    margin-right: auto;
+    // width: 35vw;
 
     a{
       display: block;
@@ -18,10 +19,13 @@
 
   .search-form{
     height: 2.1rem;
-    @include default-flex-styles;
+    display: flex;
+    align-items: center;
+    // @include default-flex-styles;
     width: 32vw;
     border: 1px solid transparent;
     border-radius: 1.1rem;
+    padding: 0 0.5em 0 0.1em;
     background: $secondary-background;
 
     &:focus-within{
@@ -35,7 +39,7 @@
     font-size: 0.97rem;
     letter-spacing: 0.02em;
     // border: 1px solid black;
-    padding-right: 0.5em;
+    // padding-right: 0.5em;
     width: 88.5%;
     background : inherit;
 
@@ -45,7 +49,8 @@
   }
 
   .search-icon{
-    width: 10%;
+    // border: 1px solid red;
+    width: 10.5%;
     text-align: center;
     font-size: 105%;
     color: $primary-background;
@@ -57,6 +62,7 @@
     @include default-flex-styles;
     cursor: pointer;
     position: relative;
+    margin: 0 5%;
 
     &:hover > .detail-bar__icon,
     &:focus > .detail-bar__icon{
@@ -129,20 +135,17 @@
 
 @media only screen and (max-width: 1024px){
 	.page-header{
-    padding-top: 0.75em;
-    padding-bottom: 0.75em;
+    padding-top: 0.7em;
+    padding-bottom: 0.7em;
 
     h1{
-      // border: 1px solid red;
-      width: 25vw;
-
       a{
         font-size: 75%;
       }
     }
 
     .search-form{
-      width: 45vw;
+      width: 46vw;
     }
   }
 }
@@ -150,42 +153,52 @@
 @media only screen and (max-width: 600px){
   .page-header{
     h1{
-      width: 48vw;
       transition: all 0.3s ease;
     }
 
-    .heading-collapse-mobile{
-      width: 0;
-      font-size: 0; 
-      transform: scaleX(0);
+    .collapse-mobile{
+      font-size: 0;
+      // transform: scaleX(0);
+
+      + .search-form{
+        transform: translateX(-2.5%);
+        width: 80vw; 
+
+        > .search-input{
+          width: 85%;
+        }
+      }
+      
+      ~ .detail-bar{
+        width: 0;
+        margin-left: 0;
+        transform: scaleX(0);
+      }
     }
     
     .search-form{
       width: 2.1rem;
+      padding: 0;
       transition: all 0.3s ease;
-    }
-
-    .form-open-mobile{
-      transform: translateX(-2.5%);
-      width: 80vw;
     }
 
     .search-input{
-      width: 84%;
+      width: 0;
       font-size: $md-font-size;
+      // border: 1px solid black;
       transition: all 0.3s ease;
     }
 
-    .input-collapse-mobile{
-      width: 0%;
-      padding: 0;
-    }
+    // .input-collapse-mobile{
+    //   width: 0%;
+    //   padding: 0;
+    // }
 
     .search-icon{
       font-size: 96%;
+      width: 2rem;
       // border: 1px solid red;
       // width: 28px;
-      width: 2rem;
     }
 
     .detail-bar__nav{
