@@ -50,11 +50,6 @@
   z-index: 2;
 }
 
-.fixed{
-  width: 100%;
-  // left: 0;
-}
-
 .container{
   border: 1px solid lightgrey;
   background: $alternate-background;
@@ -161,7 +156,7 @@
 }
 
 .form-container{
-	border-top: 2px solid lightgrey;
+  border-top: 2px solid lightgrey;
 	// padding: 1rem 2rem;
   padding: 1.5rem;
   
@@ -177,7 +172,7 @@
 	border: 1px solid $alternate-color;
 	padding: 0.6em;
 	border-radius: $secondary-border-radius;
-	margin-bottom: 0.8rem;
+  margin-bottom: 0.8rem;
 	color: black;
   background: $secondary-background;
 
@@ -227,7 +222,6 @@
   text-transform: uppercase;
   letter-spacing: 0.015em;
 	text-align: center;
-	margin-top: 0.25rem;
   
   &:hover{
     background: #18446F;
@@ -361,8 +355,16 @@ input[type="checkbox"]{
 }
 
 .fade{
-  opacity: 0;
-  transition: opacity 0.5s ease-in;
+  animation: fadeout 0.5s ease-in forwards 3s;
+}
+
+@keyframes fadeout{
+  0%{
+    opacity: 1;
+  }
+  100%{
+    opacity: 0;
+  }
 }
 
 @media only screen and (max-width: 1024px){

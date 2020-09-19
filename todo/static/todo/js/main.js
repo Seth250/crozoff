@@ -57,34 +57,20 @@ function mobileSearchBarToggle(event){
 	if (window.matchMedia("(max-width: 600px)").matches){
 		event.target.classList.toggle('fa-search');
 		event.target.classList.toggle('fa-arrow-left');
-		// document.querySelector('.detail-bar').classList.toggle('heading-collapse-mobile');
 		document.querySelector('.page-header h1').classList.toggle('collapse-mobile');
-		// document.querySelector('.search-form').classList.toggle('form-open-mobile');
 		document.querySelector('.search-input').focus();
-		// searchInput.classList.toggle('input-collapse-mobile');
-		// searchInput.focus();
 	}
 }
 
-function messageFadeTimeout(){
-	return new Promise((resolve) => {
-		setTimeout(() => {
-			messageBox.classList.add('fade');
-			resolve();
-		}, 3000);
-	})
-}
-
-async function displayMessage(message, tag){
+function displayMessage(message, tag){
 	messageBox.classList.remove('hide');
-	messageBox.classList.add(`message-${tag}`);
+	messageBox.classList.add(`message-${tag}`, 'fade');
 	messageBox.textContent = message;
-	await messageFadeTimeout();
-	// the reason why we're waiting 0.5s in the setTimeout is because the fade class has a transition with 0.5s
+	// we're waiting 3.55s in the setTimeout because the fade animation takes 3.5s(with the initial delay)
 	setTimeout(() => {
 		messageBox.classList.add('hide')
 		messageBox.classList.remove(`message-${tag}`, 'fade');
-	}, 500);
+	}, 3550);
 }
 
 function dragStartHandler(){
