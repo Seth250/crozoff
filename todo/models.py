@@ -1,16 +1,16 @@
 from django.db import models
 from django.utils import timezone
-from .utils import convert_date_time
+from .utils import get_date_time_diff
 from django.conf import settings
+from django.utils.translation import ugettext_lazy as _
 
 # Create your models here.
 
 class Todo(models.Model):
-	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='todos', 
-							 related_query_name='todo')
-	item = models.CharField(max_length=200, verbose_name="todo item")
+	user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='todos')
+	item = models.CharField(_('todo item'), max_length=200)
 	completed = models.BooleanField(default=False)
-	due_date = models.DateTimeField(verbose_name="due date")
+	due_date = models.DateTimeField()
 	order = models.PositiveIntegerField(default=0)
 	date_created = models.DateTimeField(auto_now_add=True)
 	# date_updated = models.DateTimeField(auto_now=True)
@@ -29,12 +29,12 @@ class Todo(models.Model):
 
 		elif current_date < self.due_date:
 			return {
-				'status': f'Due {convert_date_time(self.due_date - current_date)} from now',
+				'status': f'Due {get_date_time_diff(self.due_date, current_date)} from now',
 				'class_tag': 'pending'
 			}
 
 		else:
 			return {
-				'status': f'OVERDUE by {convert_date_time(current_date - self.due_date)}',
+				'status': f'OVERDUE by {get_date_time_diff(current_date, self.due_date)}',
 				'class_tag': 'overdue'
 			}

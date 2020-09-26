@@ -1,20 +1,30 @@
+from dateutil import relativedelta
 
-def format_time(time, unit):
-	time = int(time)
-	return f"{time} {unit}{'s' if time != 1 else ''}"
 
-def convert_date_time(date_time):
-	date_time = str(date_time).split(",")
-	if len(date_time) > 1:
-		return date_time[0]
+def format_value(value, unit):
+	value = int(value)
+	return f"{value} {unit}{'s' if value != 1 else ''}"
+
+def get_date_time_diff(dt1, dt2):
+	rel = relativedelta.relativedelta(dt1, dt2)
+	if rel.years:
+		return format_value(rel.years, 'Year')
+
+	elif rel.months:
+		return format_value(rel.months, 'Month')
+
+	elif rel.weeks:
+		return format_value(rel.weeks, 'Week')
+
+	elif rel.days:
+		return format_value(rel.days, 'Day')
+
+	elif rel.hours:
+		return format_value(rel.hours, 'Hour')
+
+	elif rel.minutes:
+		return format_value(rel.minutes, 'Minute')
 
 	else:
-		time = date_time[0].split(":")
-		if int(time[0]) != 0:
-			return format_time(time[0], 'Hour')
-
-		elif int(time[1]) != 0:
-			return format_time(time[1], 'Minute')
-
-		else:
-			return format_time(time[2][:2], 'Second')
+		return format_value(rel.seconds, 'Second')
+		

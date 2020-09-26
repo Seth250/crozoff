@@ -3,7 +3,7 @@ from .models import Todo
 from .forms import TodoForm
 from django.utils import timezone
 from django.forms.models import model_to_dict
-from django.contrib import messages
+# from django.contrib import messages
 from django.http import JsonResponse, Http404
 from django.db import transaction
 import json

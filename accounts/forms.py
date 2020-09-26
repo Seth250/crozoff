@@ -13,7 +13,7 @@ class UserSignUpForm(UserCreationForm):
                 'class': 'text-input-acc standard-input',
             }
         )
-    )    
+    )   
     password1 = forms.CharField(
         label=_('Password'),
         strip=False,

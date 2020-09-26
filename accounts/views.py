@@ -18,7 +18,7 @@ class UserCreateView(SuccessMessageMixin, CreateView):
         return reverse(settings.LOGIN_URL)
 
 
-class RedirectView(View):
+class UserRedirectView(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:

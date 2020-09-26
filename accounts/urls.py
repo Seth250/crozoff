@@ -1,12 +1,12 @@
 from django.urls import path, reverse_lazy
 from django.contrib.auth import views as auth_views
-from .views import UserCreateView, RedirectView
+from .views import UserCreateView, UserRedirectView
 from .forms import CustomAuthenticationForm
 
 app_name = 'accounts'
 
 urlpatterns = [
-    path('', RedirectView.as_view(), name='redirect'),
+    path('', UserRedirectView.as_view(), name='redirect'),
     path('signup/', UserCreateView.as_view(), name='signup'),
     path('login/', auth_views.LoginView.as_view(
             template_name='accounts/login.html', 
