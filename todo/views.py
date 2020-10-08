@@ -7,7 +7,6 @@ from django.forms.models import model_to_dict
 from django.http import JsonResponse, Http404
 from django.db import transaction
 import json
-# from django.urls import reverse
 from django.views.generic import View
 from django.views.generic.detail import SingleObjectMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -16,7 +15,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
 def action_error():
-	response_dict = {'message': 'Action could not be completed, Refresh and retry', 'message_tag': 'error'}
+	response_dict = {
+		'message': 'Action could not be completed, Refresh and retry', 
+		'message_tag': 'error'
+	}
 	return JsonResponse(response_dict, status=400)
 
 
@@ -29,13 +31,13 @@ class AjaxFormMixin(object):
 		todo_dict = model_to_dict(instance, fields=['id', 'item', 'order'])
 		todo_dict['message'] = self.success_message
 		todo_dict['message_tag'] = 'success'
-		todo_dict['total_pending'] = self.request.user.todos.filter(completed=False).count()
+		todo_dict['total_pending'] = self.request.user.todos.pending_count()
 		todo_dict.update(instance.get_due_info())
 		todo_dict['action'] = self.action
 		return JsonResponse(todo_dict, status=200)
 
 
-class BaseTodoView(SingleObjectMixin, View):
+class BaseTodoView(LoginRequiredMixin, SingleObjectMixin, View):
 
 	def get_queryset(self):
 		return self.request.user.todos.all()
@@ -51,7 +53,7 @@ class TodoListCreateView(LoginRequiredMixin, AjaxFormMixin, View):
 		context = {
 			'form': form,
 			'todo_list': self.get_queryset(),
-			'total_pending': self.request.user.todos.filter(completed=False).count()
+			'total_pending': self.request.user.todos.pending_count()
 		}
 		return render(request, 'todo/index.html', context)
 
@@ -71,7 +73,7 @@ class TodoListCreateView(LoginRequiredMixin, AjaxFormMixin, View):
 		return action_error()
 
 
-class TodoUpdateView(LoginRequiredMixin, AjaxFormMixin, BaseTodoView):
+class TodoUpdateView(AjaxFormMixin, BaseTodoView):
 
 	def get(self, request, *args, **kwargs):
 		obj = self.get_object()
@@ -94,7 +96,7 @@ class TodoUpdateView(LoginRequiredMixin, AjaxFormMixin, BaseTodoView):
 		return action_error()
 
 
-class TodoStatusUpdateView(LoginRequiredMixin, BaseTodoView):
+class TodoStatusUpdateView(BaseTodoView):
 
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
@@ -106,7 +108,7 @@ class TodoStatusUpdateView(LoginRequiredMixin, BaseTodoView):
 			todo_dict.update(obj.get_due_info())
 			todo_dict['message'] = self.info_message
 			todo_dict['message_tag'] = 'info'			
-			todo_dict['total_pending'] = request.user.todos.filter(completed=False).count()
+			todo_dict['total_pending'] = request.user.todos.pending_count()
 			return JsonResponse(todo_dict, status=200)
 
 		return action_error()
@@ -130,7 +132,7 @@ class TodoUncheckView(TodoStatusUpdateView):
 		return super(TodoUncheckView, self).post(request, *args, **kwargs)
 
 
-class TodoDeleteView(LoginRequiredMixin, BaseTodoView):
+class TodoDeleteView(BaseTodoView):
 
 	def post(self, request, *args, **kwargs):
 		if request.is_ajax():
@@ -138,7 +140,7 @@ class TodoDeleteView(LoginRequiredMixin, BaseTodoView):
 			todo_dict = {
 				'message': 'Todo Item has been Deleted Successfully!',
 				'message_tag': 'success',
-				'total_pending': request.user.todos.filter(completed=False).count()
+				'total_pending': request.user.todos.pending_count()
 			}
 			return JsonResponse(todo_dict, status=200)
 

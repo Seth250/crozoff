@@ -1,9 +1,9 @@
-from django.shortcuts import redirect
+# from django.shortcuts import redirect
 from django.contrib.auth import get_user_model
 from .forms import UserSignUpForm
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
-from django.views.generic import CreateView, View
+from django.views.generic import CreateView
 from django.conf import settings
 
 # Create your views here.
@@ -16,13 +16,3 @@ class UserCreateView(SuccessMessageMixin, CreateView):
 
     def get_success_url(self):
         return reverse(settings.LOGIN_URL)
-
-
-class UserRedirectView(View):
-
-    def get(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return redirect(settings.LOGIN_REDIRECT_URL)
-
-        else:
-            return redirect(settings.LOGIN_URL)

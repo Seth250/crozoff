@@ -6,11 +6,14 @@
 
 {% block content %}
 {% if messages %}
+<div class="message-container">
   {% for message in messages %}
-    <div class="message message-{{ message.tags}}">
-      {{ message }}
+    <div class="message message-{{ message.tags }} message-fixed">
+      <p>{{ message }}</p>
+      <span class="close">&times;</span>
     </div>
   {% endfor %}
+</div>
 {% endif %}
 <div class="container-acc">
   <div class="container-acc__header">

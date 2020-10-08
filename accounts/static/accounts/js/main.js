@@ -8,8 +8,16 @@ function togglePasswordVisibility(){
 }
 
 function initialize(){
+    const messageBox = document.querySelector('.message-container');
+    if (messageBox){
+        const close = document.querySelector('.close');
+        close.addEventListener('click', () => messageBox.classList.add('hide'), false);
+    }
+
     const togglers = document.querySelectorAll('.password-toggler');
-    togglers.forEach((toggler) => toggler.addEventListener('click', togglePasswordVisibility, false))
+    if (togglers.length){
+        togglers.forEach((toggler) => toggler.addEventListener('click', togglePasswordVisibility, false))
+    }
 }
 
 window.addEventListener('load', initialize, false);

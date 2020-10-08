@@ -8,16 +8,16 @@ class TodoForm(forms.ModelForm):
 		fields = ('item', 'due_date', )
 		widgets = {
 			'item': forms.TextInput(
-						attrs={
-							'class': 'text-input input-box',
-							'placeholder': 'Enter Your Todo'
-						}
-					),
+				attrs={
+					'class': 'text-input input-box',
+					'placeholder': 'Enter Your Todo'
+				}
+			),
 			'due_date': forms.DateTimeInput(
-							attrs={
-								'type': 'datetime-local', 
-								'class': 'date-time-input input-box',
-							}
-						)
+				attrs={
+					'type': 'datetime-local', 
+					'class': 'date-time-input input-box',
+				}
+			)
 		}
 			

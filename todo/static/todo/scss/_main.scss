@@ -2,16 +2,23 @@
   // reason why you're explicitly setting the top and bottom padding is because you want a footer 
   // that adapts to the page content
   // the bottom padding is actually the important piece, that's why you're not using the syntax shorthand 
-  // form for the padding and also, the reason why the bottom padding is 7.2em is because the footer's 
-  // height is 4rem and since the padding that you previously chose was 3.2em, 3.2 + 4 = 7.2em. durrh
+  // form for the padding and also, the reason why the bottom padding is 7.15em is because the footer's 
+  // height is 4rem and since the padding that you previously chose was 3.2em, 3.2 + 3.95 = 7.15em. durrh
 	padding-top: 3.2em;
-	padding-bottom: 7.2em; 
+	padding-bottom: 7.15em; 
   // padding: 3.2em 0;
   @include default-flex-styles;
   flex-direction: column;
+  position: relative;
 }
 
-.message,
+// .message,
+// .container{
+//   width: 52vw;
+//   border-radius: $primary-border-radius;
+// }
+
+.message-pop-up,
 .container{
   width: 52vw;
   border-radius: $primary-border-radius;
@@ -19,11 +26,42 @@
 
 .message{
   border: 1px solid transparent;
-	text-align: center;
 	padding: 1em 0.35em;
-	margin-bottom: 1rem;
   font-weight: 500;
   box-shadow: 0 0 0.15rem 0 rgba(0, 0, 0, 0.6);
+
+  &-container{
+    padding-bottom: 3.2em;
+  }
+
+  &-pop-up{
+    position: fixed;
+    top: 2%;
+    z-index: 2;
+    text-align: center;    
+  }
+
+  &-fixed{
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0.7em 0 0.7em 4%;
+    line-height: 1.3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    p{
+      font-size: 106%;
+    }
+
+    .close{
+      cursor: pointer;
+      font-size: 1.7rem;
+      padding: 0 4%;
+    }
+  }
   
   &-success{
     color: #155724;
@@ -42,12 +80,6 @@
     background-color: #f8d7da;
     border-color: #f5c6cb;
   }
-}
-
-.pop-up{
-  position: fixed;
-  top: 2%;
-  z-index: 2;
 }
 
 .container{
@@ -368,7 +400,8 @@ input[type="checkbox"]{
 }
 
 @media only screen and (max-width: 1024px){
-  .message,
+  // .message,
+  .message-pop-up,
   .container{
     width: 70vw;
   }
@@ -387,7 +420,8 @@ input[type="checkbox"]{
 }
 
 @media only screen and (max-width: 768px){
-  .message,
+  // .message,
+  .message-pop-up,
   .container{
     width: 82vw;
   }
@@ -449,7 +483,8 @@ input[type="checkbox"]{
 }
 
 @media only screen and (max-width: 480px){
-	.message,
+  // .message,
+  .message-pop-up,
 	.container{
 		width: 92vw;
   }
@@ -488,14 +523,14 @@ input[type="checkbox"]{
 }
 
 @media only screen and (min-width: 1600px){
-	.message,
+	.message-pop-up,
 	.container{
 		width: 48vw;
 	}
 }
 
 @media only screen and (min-width: 1920px){
-	.message,
+	.message-pop-up,
 	.container{
 		width: 42vw;
 	}
