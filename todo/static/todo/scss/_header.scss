@@ -2,7 +2,7 @@
   // border: 1px solid black;
   background: $primary-background;
   display: flex;
-  justify-content: space-around;
+  // justify-content: space-around;
   align-items: center;
   padding: 0.85em 4% 0.85em 8%;
   
@@ -10,6 +10,7 @@
     margin-right: auto;
 
     a{
+      // border: 1px solid red;
       display: block;
       color: $primary-color;
       font-size: 90%;
@@ -97,6 +98,11 @@
       background: $secondary-background;
       z-index: 3;
 
+      // needed for logout link to work when on blur is active
+      &:active{
+        display: block;
+      }
+
       li{
         list-style: none;
 
@@ -133,8 +139,8 @@
 
 @media only screen and (max-width: 1024px){
 	.page-header{
-    padding-top: 0.7em;
-    padding-bottom: 0.7em;
+    padding-top: 0.75em;
+    padding-bottom: 0.75em;
 
     h1{
       a{

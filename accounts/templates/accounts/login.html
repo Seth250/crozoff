@@ -10,7 +10,7 @@
   {% for message in messages %}
     <div class="message message-{{ message.tags }} message-fixed">
       <p>{{ message }}</p>
-      <span class="close">&times;</span>
+      <span class="close" title="close this message">&times;</span>
     </div>
   {% endfor %}
 </div>

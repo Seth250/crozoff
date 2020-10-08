@@ -53,7 +53,7 @@ class TodoListCreateView(LoginRequiredMixin, AjaxFormMixin, View):
 		context = {
 			'form': form,
 			'todo_list': self.get_queryset(),
-			'total_pending': self.request.user.todos.pending_count()
+			'total_pending': request.user.todos.pending_count()
 		}
 		return render(request, 'todo/index.html', context)
 
@@ -153,11 +153,9 @@ class TodoOrderSaveView(LoginRequiredMixin, View):
 		if request.is_ajax():
 			todo_data = json.loads(request.body)
 			with transaction.atomic():
+				queryset = request.user.todos.all()
 				for data in todo_data:
-					obj = get_object_or_404(Todo, pk=data['pk'])
-					if obj.user != request.user:
-						return action_error()
-
+					obj = get_object_or_404(queryset, pk=data['pk'])
 					obj.order = data['order']
 					obj.save()
 

@@ -84,7 +84,6 @@ function dragEndHandler(){
 
 function todoArrangementToggle(event){
 	const todoElems = document.querySelectorAll('.todo-item');
-	// you could probably check this classList and see what you can change
 	if (event.target.classList.contains('fas')){
 		event.target.classList.remove('fas', 'fa-arrows-alt');
 		event.target.classList.add('far', 'fa-save');
@@ -278,16 +277,16 @@ function deleteTodoElement(deleteBtn){
 	}).then((response) => response.ok ? response.json() : Promise.reject(response))
 	  .then((data) => {
 			const todoElem = deleteBtn.parentElement.parentElement;
-		  	todoElem.style.transform = 'translateY(30%) rotateX(15deg)';
+		  	todoElem.style.transform = 'translateY(30%)';
 		  	todoElem.style.opacity = '0';
-		  	todoElem.style.transition = 'all 0.3s ease-in';
+		  	todoElem.style.transition = 'all 0.35s ease-in';
 		  	setTimeout(() => {
 				todoContainer.removeChild(todoElem);
 				updatePendingTodoNumber(data.total_pending);
 				if (!todoContainer.children.length){
 					todoContainer.appendChild(emptyTodoListFragment());
 				}
-			}, 350);
+			}, 400);
 			displayMessage(data.message, data.message_tag);
 		})
 	  .catch((err) => errorHandler(err));
@@ -343,6 +342,7 @@ function initialize(){
 	const detailBar = document.querySelector('.detail-bar');
 	const detailBarNav = document.querySelector('.detail-bar__nav');
 	detailBar.addEventListener('click', () => detailBarNav.classList.toggle('hide'), false);
+	detailBar.addEventListener('blur', () => detailBarNav.classList.add('hide'), false);
 
 	const moveIcon = document.querySelector('.move-icon');
 	moveIcon.addEventListener('click', todoArrangementToggle, false);

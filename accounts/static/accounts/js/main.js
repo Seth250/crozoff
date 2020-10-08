@@ -8,10 +8,10 @@ function togglePasswordVisibility(){
 }
 
 function initialize(){
-    const messageBox = document.querySelector('.message-container');
-    if (messageBox){
+    const messageContainer = document.querySelector('.message-container');
+    if (messageContainer){
         const close = document.querySelector('.close');
-        close.addEventListener('click', () => messageBox.classList.add('hide'), false);
+        close.addEventListener('click', () => messageContainer.classList.add('hide'), false);
     }
 
     const togglers = document.querySelectorAll('.password-toggler');

@@ -3,7 +3,7 @@
   // that adapts to the page content
   // the bottom padding is actually the important piece, that's why you're not using the syntax shorthand 
   // form for the padding and also, the reason why the bottom padding is 7.15em is because the footer's 
-  // height is 4rem and since the padding that you previously chose was 3.2em, 3.2 + 3.95 = 7.15em. durrh
+  // height is 3.95rem and since the padding that you previously chose was 3.2em, 3.2 + 3.95 = 7.15em. durrh
 	padding-top: 3.2em;
 	padding-bottom: 7.15em; 
   // padding: 3.2em 0;
@@ -11,12 +11,6 @@
   flex-direction: column;
   position: relative;
 }
-
-// .message,
-// .container{
-//   width: 52vw;
-//   border-radius: $primary-border-radius;
-// }
 
 .message-pop-up,
 .container{
@@ -434,7 +428,7 @@ input[type="checkbox"]{
 
 	.todo-list-container{
 		padding: 0.4rem;
-		max-height: 70vh;
+    max-height: 70vh;
 	}
 
 	.todo-item{
