@@ -15,6 +15,7 @@
 	</div>
 	<div class="todo-list-container" id="todo-list-container">
 		{% for todo in todo_list %}
+			<!-- probably use BEM syntax for todo-item children e.g todo-item__name, todo-item__status -->
 			<div class="todo-item" data-order="{{ todo.pk }}-{{ todo.order }}" id="item-{{ todo.pk }}">
 				<div class="item-col-1">
 					<div class="todo-name {% if todo.completed %}strike{% endif %}">
