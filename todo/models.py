@@ -17,7 +17,7 @@ class Todo(models.Model):
 	item = models.CharField(_('todo item'), max_length=200)
 	completed = models.BooleanField(default=False)
 	due_date = models.DateTimeField()
-	order = models.PositiveIntegerField(default=0, editable=False)
+	order = models.PositiveIntegerField(default=0)
 	date_created = models.DateTimeField(auto_now_add=True)
 	# date_updated = models.DateTimeField(auto_now=True)
 	date_completed = models.DateTimeField(blank=True, null=True)

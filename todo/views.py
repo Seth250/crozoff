@@ -31,7 +31,7 @@ class AjaxFormMixin(object):
 		todo_dict = model_to_dict(instance, fields=['id', 'item', 'order'])
 		todo_dict['message'] = self.success_message
 		todo_dict['message_tag'] = 'success'
-		todo_dict['total_pending'] = self.request.user.todos.pending_count()
+		# todo_dict['total_pending'] = self.request.user.todos.pending_count()
 		todo_dict.update(instance.get_due_info())
 		todo_dict['action'] = self.action
 		return JsonResponse(todo_dict, status=200)
@@ -108,7 +108,7 @@ class TodoStatusUpdateView(BaseTodoView):
 			todo_dict.update(obj.get_due_info())
 			todo_dict['message'] = self.info_message
 			todo_dict['message_tag'] = 'info'			
-			todo_dict['total_pending'] = request.user.todos.pending_count()
+			# todo_dict['total_pending'] = request.user.todos.pending_count()
 			return JsonResponse(todo_dict, status=200)
 
 		return action_error()
@@ -140,7 +140,7 @@ class TodoDeleteView(BaseTodoView):
 			todo_dict = {
 				'message': 'Todo Item has been Deleted Successfully!',
 				'message_tag': 'success',
-				'total_pending': request.user.todos.pending_count()
+				# 'total_pending': request.user.todos.pending_count()
 			}
 			return JsonResponse(todo_dict, status=200)
 
@@ -159,7 +159,10 @@ class TodoOrderSaveView(LoginRequiredMixin, View):
 					obj.order = data['order']
 					obj.save()
 
-			todo_dict = {'message': 'Order has been Saved Successfully!', 'message_tag': 'success'}
+			todo_dict = {
+				'message': 'Order has been Saved Successfully!', 
+				'message_tag': 'success'
+			}
 			return JsonResponse(todo_dict, status=200)
 
 		return action_error()

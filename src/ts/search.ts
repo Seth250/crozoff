@@ -1,12 +1,13 @@
 import { HTMLEvent } from './interfaces';
 
+
 export function searchTodos(event: HTMLEvent<HTMLInputElement>): void {
-    const searchText = event.currentTarget.value.toLocaleLowerCase();
-    const todoNames = Array.from(document.querySelectorAll('.todo-name') as NodeListOf<HTMLDivElement>);
+    const searchText = event.currentTarget.value.toLowerCase();
+    const todoNames = [...document.querySelectorAll('.todo-name') as NodeListOf<HTMLDivElement>];
     todoNames.forEach(name => {
         const nameText = name.textContent!.toLowerCase();
-        const todoElem = name.closest('.todo-item') as HTMLDivElement;
-        // const todoElem = (name.parentNode as HTMLDivElement).parentNode as HTMLDivElement;
+        // const todoElem = name.closest('.todo-item') as HTMLDivElement;
+        const todoElem = (name.parentNode as HTMLDivElement).parentNode as HTMLDivElement;
         if (nameText.indexOf(searchText) === -1) {
             todoElem.classList.add('hide');
         } else {

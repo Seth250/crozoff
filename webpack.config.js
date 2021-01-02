@@ -1,14 +1,15 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'development',
-    entry: './todo/static/todo/ts/main.ts',
+    mode: 'production',
+    // devtool: 'eval-source-map',
+    entry: './src/ts/index.ts',
     module: {
         rules: [
             {
                 test: /\.ts$/,
                 use: 'ts-loader',
-                include: [path.resolve(__dirname, 'todo/static/todo/ts')]
+                include: [path.resolve(__dirname, 'src')]
             }
         ]
     },
@@ -17,6 +18,6 @@ module.exports = {
     },
     output: {
         filename: 'bundle.js',
-        path: path.resolve(__dirname, 'todo/static/todo/js')
+        path: path.resolve(__dirname, 'static/js')
     }
 }
